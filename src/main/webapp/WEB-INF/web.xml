@@ -36,7 +36,7 @@
 	
     <servlet-mapping>
          <servlet-name>Servlet1</servlet-name>
-         <url-pattern>/test</url-pattern>
+         <url-pattern>/servlet1</url-pattern>
     </servlet-mapping>
 	
     <!--    <filter>
