@@ -19,16 +19,16 @@ public class XServletContextListener implements ServletContextListener {
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		LOGGER.trace(getClass().getName()+".contextInitialized()");
-		LOGGER.debug(getClass().getName()+".contextInitialized()");
-		LOGGER.info(getClass().getName()+".contextInitialized()");
-		LOGGER.warn(getClass().getName()+".contextInitialized()");
-		LOGGER.error(getClass().getName()+".contextInitialized()");
+		LOGGER.trace("contextInitialized()");
+		LOGGER.debug("contextInitialized()");
+		LOGGER.info("contextInitialized()");
+		LOGGER.warn("contextInitialized()");
+		LOGGER.error("contextInitialized()");
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		LOGGER.info(getClass().getName()+".contextDestroyed()");
+		LOGGER.debug("contextDestroyed()");
 	}
 	
 }

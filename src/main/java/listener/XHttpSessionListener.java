@@ -18,12 +18,12 @@ public class XHttpSessionListener implements HttpSessionListener {
 	
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
-		LOGGER.debug(getClass().getName()+".sessionCreated()");
+		LOGGER.debug("sessionCreated()");
 	}
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent se) {
-		LOGGER.debug(getClass().getName()+".sessionDestroyed()");
+		LOGGER.debug("sessionDestroyed()");
 	}
 
 }
