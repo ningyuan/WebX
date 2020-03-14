@@ -6,16 +6,16 @@
     	</encoder>   
   	</appender>   
     
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender"> 
-　　　　　　　　<file>${catalina.home}/logs/WebX.log</file> 
+    <!--  <appender name="FILE" class="ch.qos.logback.core.FileAppender"> 
+    	 <file>${basedir}/src/main/webapp/logs/WebX.log</file>
 　　　　　　　　<append>true</append> 
 　　　　　　　　<encoder> 
 　　　　　　　　	<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern> 
 　　　　　　　　</encoder> 
-　　　 </appender> 
+　　　 </appender> -->
 
   	<root level="ALL">             
     	<appender-ref ref="CONSOLE" />   
-    	<!--  <appender-ref ref="FILE" />  -->
+    	<!-- <appender-ref ref="FILE" /> --> 
   	</root>     
 </configuration>  
