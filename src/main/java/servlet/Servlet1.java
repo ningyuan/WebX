@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
  * @author ningyuan
  *
  */
-//@WebServlet("/test")
+//@WebServlet("/servlet1")
 public class Servlet1 extends HttpServlet {
 
 	/**
