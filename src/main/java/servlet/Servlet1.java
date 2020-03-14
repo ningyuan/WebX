@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import listener.XServletContextListener;
 
 /**
  * @author ningyuan
@@ -33,7 +32,7 @@ public class Servlet1 extends HttpServlet {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Servlet1.class);
 	
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) 
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException{
 		
 		LOGGER.debug("doGet()");
@@ -58,7 +57,7 @@ public class Servlet1 extends HttpServlet {
 	}
 	
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException{
 		doGet(request, response);
 	}
