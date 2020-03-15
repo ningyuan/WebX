@@ -21,15 +21,15 @@ import org.slf4j.LoggerFactory;
  * @author ningyuan
  *
  */
-//@WebServlet("/servlet1")
-public class Servlet1 extends HttpServlet {
+//@WebServlet("/filter")
+public class FilterServlet extends HttpServlet {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(Servlet1.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FilterServlet.class);
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -47,7 +47,7 @@ public class Servlet1 extends HttpServlet {
         String servletPara = getInitParameter("servletName");
         
         PrintWriter out = response.getWriter();
-        
+       
         out.write(contextPara);
         out.write("   ");
         out.write(servletPara);
@@ -59,6 +59,8 @@ public class Servlet1 extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException{
+		LOGGER.debug("doPost()");
+		
 		doGet(request, response);
 	}
 }
