@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ningyuan.pan.webx.web.listener;
+package listener;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

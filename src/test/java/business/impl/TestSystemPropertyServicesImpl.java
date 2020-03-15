@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ningyuan.pan.webx.business.impl;
+package business.impl;
 
 
 import org.junit.After;
@@ -11,8 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ningyuan.pan.webx.business.SystemPropertyService;
-import ningyuan.pan.webx.business.impl.SystemPropertyServiceImpl;
+import business.SystemPropertyService;
 
 
 /**

@@ -1,11 +1,11 @@
 /**
  * 
  */
-package ningyuan.pan.webx.business.impl;
+package business.impl;
 
 import java.util.Properties;
 
-import ningyuan.pan.webx.business.SystemPropertyService;
+import business.SystemPropertyService;
 
 /**
  * @author ningyuan
