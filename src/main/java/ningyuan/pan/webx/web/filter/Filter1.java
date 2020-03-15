@@ -1,7 +1,7 @@
 /**
  * 
  */
-package filter;
+package ningyuan.pan.webx.web.filter;
 
 import java.io.IOException;
 
