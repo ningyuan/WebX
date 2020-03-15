@@ -1,7 +1,7 @@
 /**
  * 
  */
-package business;
+package ningyuan.pan.webx.business;
 
 import java.util.Properties;
 

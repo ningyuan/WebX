@@ -1,7 +1,7 @@
 /**
  * 
  */
-package listener;
+package ningyuan.pan.webx.web.listener;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
