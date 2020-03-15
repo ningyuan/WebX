@@ -15,6 +15,9 @@
     <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
     
     <!-- dependency version -->
+    <servicex-api.version>0.0.1-SNAPSHOT</servicex-api.version>
+    <servicex.version>0.0.1-SNAPSHOT</servicex.version>
+    
     <junit.version>4.12</junit.version>
 	<slf4j-api.version>1.7.30</slf4j-api.version>
 	<logback-classic.version>1.2.3</logback-classic.version>
@@ -23,15 +26,23 @@
   </properties>
   
   <build>
-  		<finalName>WebX</finalName>
+  		<finalName>${project.artifactId}-${project.version}</finalName>
   		 
-  		<!-- make pom properties available to files in resources directory -->
     	<resources>  
         	<resource>  
             	<directory>${project.basedir}/src/main/resources</directory>  
+            	<targetPath>${project.basedir}/target/classes</targetPath>
+            	<!-- make pom properties available to files in resources directory -->
             	<filtering>true</filtering>  
         	</resource>  
     	</resources> 
+    	
+    	<testResources>
+    		<testResource>
+    			<directory>${project.basedir}/src/test/resources</directory>
+    			<targetPath>${project.basedir}/target/test-classes</targetPath>
+    		</testResource>
+    	</testResources>
     	
     	<pluginManagement>
       		<plugins>
@@ -58,22 +69,39 @@
     	</pluginManagement>
     
     	<plugins>
-      		<plugin>
+      		<plugin>  
         		<groupId>org.codehaus.mojo</groupId>
         		<artifactId>properties-maven-plugin</artifactId>
       		</plugin>
-    	</plugins>
+    	</plugins>  
   </build>
    
    <dependencyManagement>  
        <dependencies>  
-   	       <dependency>  
-                <groupId>junit</groupId>
-      			<artifactId>junit</artifactId>
-      			<version>${junit.version}</version>
-      			<scope>test</scope>
-   	       </dependency> 
+       		<dependency>
+    			<groupId>ningyuan.pan</groupId>
+    			<artifactId>ServiceX-api</artifactId>
+    			<version>${servicex-api.version}</version>
+    			<scope>compile</scope>
+    	   </dependency>
+		   <dependency>
+    			<groupId>ningyuan.pan</groupId>
+    			<artifactId>ServiceX</artifactId>
+    			<version>${servicex.version}</version>
+    			<exclusions>
+            		<exclusion>
+                		<groupId>org.slf4j</groupId>
+                		<artifactId>slf4j-api</artifactId>
+            		</exclusion>
+            		<exclusion>
+                		<groupId>ch.qos.logback</groupId>
+                		<artifactId>logback-classic</artifactId>
+            		</exclusion>
+        		</exclusions>
+    			<scope>compile</scope>
+		   </dependency>
    	       
+   	       <!-- logging -->
    	       <dependency>
     			<groupId>org.slf4j</groupId>
     			<artifactId>slf4j-api</artifactId>
@@ -106,16 +134,28 @@
     			<artifactId>javax.servlet-api</artifactId>
     			<version>${javax.servlet.version}</version>
     			<scope>provided</scope>
-			</dependency>
+		   </dependency>
+			
+		   <dependency>  
+                <groupId>junit</groupId>
+      			<artifactId>junit</artifactId>
+      			<version>${junit.version}</version>
+      			<scope>test</scope>
+   	       </dependency> 
   	   </dependencies> 
   </dependencyManagement>
   
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+  	<dependency>
+    	<groupId>ningyuan.pan</groupId>
+    	<artifactId>ServiceX-api</artifactId>
     </dependency>
     
+  	<dependency>
+    	<groupId>ningyuan.pan</groupId>
+    	<artifactId>ServiceX</artifactId>
+    </dependency>
+   
     <dependency>
     	<groupId>org.slf4j</groupId>
     	<artifactId>slf4j-api</artifactId>
@@ -137,5 +177,9 @@
     	<artifactId>javax.servlet-api</artifactId>
     </dependency>
     
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
   </dependencies>
 </project>

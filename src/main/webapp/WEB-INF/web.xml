@@ -53,25 +53,35 @@
     <!-- the sequence of filter-mapping is important -->
     <filter-mapping>
            <filter-name>Filter1</filter-name>
-           <url-pattern>/servlet1</url-pattern>
+           <url-pattern>/filter</url-pattern>
     </filter-mapping>
     <filter-mapping>
     	<filter-name>Filter2</filter-name>
-        <url-pattern>/servlet1</url-pattern>
+        <url-pattern>/filter</url-pattern>
     </filter-mapping>
 
     <servlet>
-    	<servlet-name>Servlet1</servlet-name>
-        <servlet-class>ningyuan.pan.webx.web.servlet.Servlet1</servlet-class>
+    	<servlet-name>FilterServlet</servlet-name>
+        <servlet-class>ningyuan.pan.webx.web.servlet.FilterServlet</servlet-class>
         <init-param>
        		<param-name>servletName</param-name>
-       		<param-value>servlet1</param-value>
+       		<param-value>filterServlet</param-value>
     	</init-param>
-        <load-on-startup>1</load-on-startup>
+        <load-on-startup>-1</load-on-startup>
+    </servlet>
+    
+    <servlet>
+    	<servlet-name>ServiceXServlet</servlet-name>
+        <servlet-class>ningyuan.pan.webx.web.servlet.ServiceXServlet</servlet-class>
     </servlet>
 	
     <servlet-mapping>
-         <servlet-name>Servlet1</servlet-name>
-         <url-pattern>/servlet1</url-pattern>
+        <servlet-name>FilterServlet</servlet-name>
+        <url-pattern>/filter</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ServiceXServlet</servlet-name>
+        <url-pattern>/servicex</url-pattern>
     </servlet-mapping>
 </web-app> 
