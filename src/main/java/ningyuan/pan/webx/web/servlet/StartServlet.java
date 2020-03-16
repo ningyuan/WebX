@@ -32,10 +32,6 @@ public class StartServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOGGER.debug("doGet()");
 		
-		String cacheName = getServletContext().getInitParameter("cacheName");
-		
-		getServletContext().setAttribute(cacheName, new Object());
-		
 		request.getRequestDispatcher("./pages/start.jsp").forward(request, response);
 	}
 

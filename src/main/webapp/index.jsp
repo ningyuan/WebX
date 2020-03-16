@@ -2,6 +2,6 @@
     pageEncoding="UTF-8" session="false"%>
 <html>
 <body>
-<h2>Start Servlet</h2>
+<h2>WebX</h2>
 </body>
 </html>

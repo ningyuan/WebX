@@ -15,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ningyuan.pan.webx.util.cache.Cache;
+
 
 /**
  * @author ningyuan
@@ -46,15 +48,16 @@ public class FilterServlet extends HttpServlet {
         String cacheName = getServletContext().getInitParameter("cacheName");
         String servletPara = getInitParameter("servletName");
         
-        Object cacheObj = getServletContext().getAttribute(cacheName);
+        Cache cache = (Cache)getServletContext().getAttribute(cacheName);
         
         PrintWriter out = response.getWriter();
-       
-        out.write(cacheObj.getClass().getName());
-        out.write("   ");
-        out.write(contextPara);
-        out.write("   ");
-        out.write(servletPara);
+        
+        
+        out.write("cache name: "+cache.get("name"));
+        out.write("</br>");
+        out.write("context para projectName: "+contextPara);
+        out.write("</br>");
+        out.write("servlet para servletName: "+servletPara);
         out.close();
         
         session.invalidate();

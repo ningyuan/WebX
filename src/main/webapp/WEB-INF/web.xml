@@ -6,6 +6,7 @@
 
 	<display-name>WebX Project</display-name>
 	
+	<!-- if not defined use default index.jsp -->
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.jsp</welcome-file>
@@ -29,9 +30,14 @@
 		<session-timeout>2</session-timeout>
 	</session-config>
 	 
+	<!-- the sequence of servlet context listener is important -->
     <listener>
     	<listener-class>ningyuan.pan.webx.web.listener.XServletContextListener</listener-class>
+    </listener>
+    <listener>
+    	<listener-class>ningyuan.pan.webx.web.listener.CacheServletContextListener</listener-class>
     </listener> 
+     
     <listener>
     	<listener-class>ningyuan.pan.webx.web.listener.XHttpSessionListener</listener-class>
     </listener> 

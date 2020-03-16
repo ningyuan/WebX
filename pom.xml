@@ -18,11 +18,16 @@
     <servicex-api.version>0.0.1-SNAPSHOT</servicex-api.version>
     <servicex.version>0.0.1-SNAPSHOT</servicex.version>
     
-    <junit.version>4.12</junit.version>
+    <jedis.version>3.2.0</jedis.version>
+    <lettuce-core.version>5.2.2.RELEASE</lettuce-core.version>
+    
 	<slf4j-api.version>1.7.30</slf4j-api.version>
 	<logback-classic.version>1.2.3</logback-classic.version>
 	<slf4j-jdk14.version>1.7.30</slf4j-jdk14.version>
+	
 	<javax.servlet.version>4.0.1</javax.servlet.version>
+	
+	<junit.version>4.12</junit.version>
   </properties>
   
   <build>
@@ -101,6 +106,43 @@
     			<scope>compile</scope>
 		   </dependency>
    	       
+   	       <!-- java redis client -->
+   	       <dependency>
+    	   		<groupId>redis.clients</groupId>
+    			<artifactId>jedis</artifactId>
+    			<version>${jedis.version}</version>
+    			<exclusions>
+            		<exclusion>
+                		<groupId>org.slf4j</groupId>
+                		<artifactId>slf4j-api</artifactId>
+            		</exclusion>
+            	</exclusions>
+		   </dependency>
+		   
+		   <!--  <dependency>
+    			<groupId>io.lettuce</groupId>
+    			<artifactId>lettuce-core</artifactId>
+    			<version>${lettuce-core.version}</version> -->
+    		<!--  <exclusions>
+    				<exclusion>
+    					<groupId>io.netty</groupId>
+    					<artifactId>netty-common</artifactId>
+    				</exclusion>
+    				<exclusion>
+    					<groupId>io.netty</groupId>
+    					<artifactId>netty-transport</artifactId>
+    				</exclusion>
+    				<exclusion>
+    					<groupId>io.netty</groupId>
+    					<artifactId>netty-buffer</artifactId>
+    				</exclusion>
+    				<exclusion>
+    					<groupId>io.netty</groupId>
+    					<artifactId>netty-buffer</artifactId>
+    				</exclusion>
+    			</exclusions> -->	
+		    <!-- </dependency> -->
+   	       
    	       <!-- logging -->
    	       <dependency>
     			<groupId>org.slf4j</groupId>
@@ -156,6 +198,15 @@
     	<artifactId>ServiceX</artifactId>
     </dependency>
    
+   	<dependency>
+   		<groupId>redis.clients</groupId>
+    	<artifactId>jedis</artifactId>
+    </dependency>
+    <!--  <dependency>
+    	<groupId>io.lettuce</groupId>
+    	<artifactId>lettuce-core</artifactId>
+    </dependency> -->
+    
     <dependency>
     	<groupId>org.slf4j</groupId>
     	<artifactId>slf4j-api</artifactId>
