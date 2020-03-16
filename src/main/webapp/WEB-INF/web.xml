@@ -23,7 +23,11 @@
     </context-param>
     <context-param>
     	<param-name>cacheName</param-name>
-      	<param-value>cache</param-value>
+      	<param-value>RedisCache</param-value>
+    </context-param>
+    <context-param>
+    	<param-name>configPropertyFile</param-name>
+    	<param-value>env.dev.properties</param-value>
     </context-param>
      
     <session-config>
