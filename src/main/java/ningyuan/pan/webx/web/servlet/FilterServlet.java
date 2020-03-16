@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,10 +43,15 @@ public class FilterServlet extends HttpServlet {
 		response.setContentType("text/html;charset=utf-8");
         
         String contextPara = getServletContext().getInitParameter("projectName");
+        String cacheName = getServletContext().getInitParameter("cacheName");
         String servletPara = getInitParameter("servletName");
+        
+        Object cacheObj = getServletContext().getAttribute(cacheName);
         
         PrintWriter out = response.getWriter();
        
+        out.write(cacheObj.getClass().getName());
+        out.write("   ");
         out.write(contextPara);
         out.write("   ");
         out.write(servletPara);

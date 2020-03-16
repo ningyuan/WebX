@@ -20,6 +20,10 @@
     	<param-name>projectName</param-name>
       	<param-value>WebX</param-value>
     </context-param>
+    <context-param>
+    	<param-name>cacheName</param-name>
+      	<param-value>cache</param-value>
+    </context-param>
      
     <session-config>
 		<session-timeout>2</session-timeout>
@@ -59,7 +63,14 @@
     	<filter-name>Filter2</filter-name>
         <url-pattern>/filter</url-pattern>
     </filter-mapping>
-
+	
+	<servlet>
+    	<servlet-name>StartServlet</servlet-name>
+        <servlet-class>ningyuan.pan.webx.web.servlet.StartServlet</servlet-class>
+   		<!-- the servlet is loaded on startup the smaller the positive num is the higher the priority is  -->
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    
     <servlet>
     	<servlet-name>FilterServlet</servlet-name>
         <servlet-class>ningyuan.pan.webx.web.servlet.FilterServlet</servlet-class>
@@ -67,7 +78,6 @@
        		<param-name>servletName</param-name>
        		<param-value>filterServlet</param-value>
     	</init-param>
-        <load-on-startup>-1</load-on-startup>
     </servlet>
     
     <servlet>
@@ -75,6 +85,11 @@
         <servlet-class>ningyuan.pan.webx.web.servlet.ServiceXServlet</servlet-class>
     </servlet>
 	
+	<servlet-mapping>
+        <servlet-name>StartServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>FilterServlet</servlet-name>
         <url-pattern>/filter</url-pattern>
