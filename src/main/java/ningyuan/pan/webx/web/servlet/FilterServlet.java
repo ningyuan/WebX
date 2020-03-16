@@ -52,9 +52,11 @@ public class FilterServlet extends HttpServlet {
         
         PrintWriter out = response.getWriter();
         
-        
-        out.write("cache name: "+cache.get("name"));
-        out.write("</br>");
+        if(cache != null) {
+        	 out.write("cache name: "+cache.get("name"));
+             out.write("</br>");
+        }
+       
         out.write("context para projectName: "+contextPara);
         out.write("</br>");
         out.write("servlet para servletName: "+servletPara);

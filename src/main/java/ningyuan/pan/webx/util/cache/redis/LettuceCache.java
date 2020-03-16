@@ -17,8 +17,8 @@ import ningyuan.pan.webx.util.cache.State;
  * @author ningyuan
  *
  */
-public class RedisCache implements Cache {
-	private static final Logger LOGGER = LoggerFactory.getLogger(RedisCache.class);
+public class LettuceCache implements Cache {
+	private static final Logger LOGGER = LoggerFactory.getLogger(LettuceCache.class);
 	
 	
 	private static State  state = State.CLOSED;
