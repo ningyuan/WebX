@@ -62,7 +62,19 @@ public class LettuceCache implements Cache {
 		
 		return "";
 	}
+	
+	@Override
+	public boolean put(String key, String value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
+	@Override
+	public boolean remove(String key) {
+		// TODO Auto-generated method stub
+		return false;
+	}	
+	
 	@Override
 	public void close(String... args) {
 		/*synchronized(RedisCache.class) {
@@ -74,5 +86,5 @@ public class LettuceCache implements Cache {
 				LOGGER.debug("close()");
 			}
 		}*/
-	}	
+	}
 }

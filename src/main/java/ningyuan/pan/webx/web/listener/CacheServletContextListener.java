@@ -3,10 +3,6 @@
  */
 package ningyuan.pan.webx.web.listener;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Properties;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -28,22 +24,12 @@ public class CacheServletContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		LOGGER.debug("contextInitialized()");
 		
-		String cacheName = sce.getServletContext().getInitParameter("cacheName");
-		String configPropertyFile = sce.getServletContext().getInitParameter("configPropertyFile");
-		
-		Properties configProp;
-		try {
-			configProp = new Properties();
-        	configProp.load(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(configPropertyFile)));
-		} catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+		String cacheName = sce.getServletContext().getInitParameter("cache.name");
 		
 		if(cacheName.equals("RedisCache")) {
-			Cache cache = new JedisCache();
+			Cache cache = new JedisCache(sce.getServletContext().getInitParameter("redis.properties.file"));
 	    	
-			cache.open(configProp.getProperty("redis.host"), configProp.getProperty("redis.port"));
+			cache.open();
 	    		
 			sce.getServletContext().setAttribute(cacheName, cache);
 		}
@@ -53,7 +39,7 @@ public class CacheServletContextListener implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent sce) {
 		LOGGER.debug("contextDestroyed()");
 		
-		Cache cache = (Cache)sce.getServletContext().getAttribute(sce.getServletContext().getInitParameter("cacheName"));
+		Cache cache = (Cache)sce.getServletContext().getAttribute(sce.getServletContext().getInitParameter("cache.name"));
 		
 		if(cache != null) {
 			cache.close();

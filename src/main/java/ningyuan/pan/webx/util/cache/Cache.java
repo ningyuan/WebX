@@ -15,6 +15,10 @@ public interface Cache {
 	
 	public String get(String key);
 	
+	public boolean put(String key, String value);
+	
+	public boolean remove(String key);
+	
 	public void close(String... args);
 
 }

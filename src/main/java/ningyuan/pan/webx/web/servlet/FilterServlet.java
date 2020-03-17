@@ -44,8 +44,8 @@ public class FilterServlet extends HttpServlet {
         
 		response.setContentType("text/html;charset=utf-8");
         
-        String contextPara = getServletContext().getInitParameter("projectName");
-        String cacheName = getServletContext().getInitParameter("cacheName");
+        String contextPara = getServletContext().getInitParameter("project.name");
+        String cacheName = getServletContext().getInitParameter("cache.name");
         String servletPara = getInitParameter("servletName");
         
         Cache cache = (Cache)getServletContext().getAttribute(cacheName);
@@ -53,11 +53,11 @@ public class FilterServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         
         if(cache != null) {
-        	 out.write("cache name: "+cache.get("name"));
+        	 out.write("cache.name: "+cache.get("name"));
              out.write("</br>");
         }
        
-        out.write("context para projectName: "+contextPara);
+        out.write("context para project.name: "+contextPara);
         out.write("</br>");
         out.write("servlet para servletName: "+servletPara);
         out.close();

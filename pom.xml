@@ -39,11 +39,7 @@
             	<targetPath>${project.basedir}/target/classes</targetPath>
             	<!-- make pom properties available to files in resources directory -->
             	<filtering>true</filtering>  
-        	</resource>
-        	<resource>  
-            	<directory>${project.basedir}/properties</directory>  
-            	<targetPath>${project.basedir}/target/classes</targetPath>
-        	</resource>    
+        	</resource> 
     	</resources> 
     	
     	<testResources>

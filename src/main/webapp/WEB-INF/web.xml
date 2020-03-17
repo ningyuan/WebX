@@ -18,16 +18,16 @@
    	</error-page>    
    
     <context-param>
-    	<param-name>projectName</param-name>
+    	<param-name>project.name</param-name>
       	<param-value>WebX</param-value>
     </context-param>
     <context-param>
-    	<param-name>cacheName</param-name>
+    	<param-name>cache.name</param-name>
       	<param-value>RedisCache</param-value>
     </context-param>
     <context-param>
-    	<param-name>configPropertyFile</param-name>
-    	<param-value>env.dev.properties</param-value>
+    	<param-name>redis.properties.file</param-name>
+    	<param-value>conf/redis.properties</param-value>
     </context-param>
      
     <session-config>
