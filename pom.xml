@@ -15,6 +15,7 @@
     <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
     
     <!-- dependency version -->
+    <util.version>0.0.1-SNAPSHOT</util.version>
     <servicex-api.version>0.0.1-SNAPSHOT</servicex-api.version>
     <servicex.version>0.0.1-SNAPSHOT</servicex.version>
     
@@ -82,8 +83,24 @@
   </build>
    
    <dependencyManagement>  
-       <dependencies>  
+       <dependencies>
        		<dependency>
+    			<groupId>ningyuan.pan</groupId>
+    			<artifactId>util</artifactId>
+    			<version>${util.version}</version>
+    			<exclusions>
+            		<exclusion>
+                		<groupId>org.slf4j</groupId>
+                		<artifactId>slf4j-api</artifactId>
+            		</exclusion>
+            		<exclusion>
+                		<groupId>ch.qos.logback</groupId>
+                		<artifactId>logback-classic</artifactId>
+            		</exclusion>
+        		</exclusions>
+    			<scope>compile</scope>
+    	   </dependency>  
+       	   <dependency>
     			<groupId>ningyuan.pan</groupId>
     			<artifactId>ServiceX-api</artifactId>
     			<version>${servicex-api.version}</version>
@@ -188,6 +205,10 @@
   </dependencyManagement>
   
   <dependencies>
+  	<dependency>
+    	<groupId>ningyuan.pan</groupId>
+    	<artifactId>util</artifactId>
+    </dependency>
   	<dependency>
     	<groupId>ningyuan.pan</groupId>
     	<artifactId>ServiceX-api</artifactId>

@@ -12,9 +12,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ningyuan.pan.util.exception.ExceptionUtils;
 import ningyuan.pan.webx.util.cache.Cache;
 import ningyuan.pan.webx.util.cache.State;
-import ningyuan.pan.webx.util.exception.Utils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -61,7 +61,7 @@ public class JedisCache implements Cache {
         	port = Integer.parseInt(configProp.getProperty("redis.port"));
         		
 		} catch (IOException e) {
-			LOGGER.error(Utils.printStackTraceToString(e));
+			LOGGER.error(ExceptionUtils.printStackTraceToString(e));
         }	
 	}
 	
@@ -98,7 +98,7 @@ public class JedisCache implements Cache {
 			}
 		}
 		catch (JedisException e) {
-			LOGGER.error(Utils.printStackTraceToString(e));
+			LOGGER.error(ExceptionUtils.printStackTraceToString(e));
 		}
 		finally {
 			if(jedis != null) {
@@ -134,7 +134,7 @@ public class JedisCache implements Cache {
 			}
 		}
 		catch (JedisException e) {
-			LOGGER.error(Utils.printStackTraceToString(e));
+			LOGGER.error(ExceptionUtils.printStackTraceToString(e));
 			
 			return "";
 		}
@@ -172,7 +172,7 @@ public class JedisCache implements Cache {
 			}
 		}
 		catch (JedisException e) {
-			LOGGER.error(Utils.printStackTraceToString(e));
+			LOGGER.error(ExceptionUtils.printStackTraceToString(e));
 			
 			return false;
 		}
@@ -210,7 +210,7 @@ public class JedisCache implements Cache {
 			}
 		}
 		catch (JedisException e) {
-			LOGGER.error(Utils.printStackTraceToString(e));
+			LOGGER.error(ExceptionUtils.printStackTraceToString(e));
 			
 			return false;
 		}
