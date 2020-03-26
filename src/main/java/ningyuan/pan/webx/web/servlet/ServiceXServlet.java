@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ningyuan.pan.servicex.impl.ServiceXImpl;
-import ningyuan.pan.servicex.service.ServiceX;
+import ningyuan.pan.servicex.ServiceX;
 
 /**
  * @author ningyuan
@@ -41,10 +41,11 @@ public class ServiceXServlet extends HttpServlet {
 		response.setContentType("text/html;charset=utf-8");
         
         ServiceX service = new ServiceXImpl();
-        
+		
         PrintWriter out = response.getWriter();
         
         out.write(service.getName());
+        
         out.close();
 	}
 
