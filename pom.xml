@@ -111,6 +111,10 @@
     			<artifactId>ServiceX</artifactId>
     			<version>${servicex.version}</version>
     			<exclusions>
+    				<exclusion>
+                		<groupId>ningyuan.pan</groupId>
+                		<artifactId>util</artifactId>
+            		</exclusion>
             		<exclusion>
                 		<groupId>org.slf4j</groupId>
                 		<artifactId>slf4j-api</artifactId>
