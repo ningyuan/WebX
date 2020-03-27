@@ -30,6 +30,7 @@ public class JedisCache implements Cache {
 	
 	private State state = State.CLOSED;
 	
+	// jedis pool is thread safe
 	private JedisPool jedisPool;
 	
 	private final JedisPoolConfig jedisPoolConfig;
@@ -40,8 +41,10 @@ public class JedisCache implements Cache {
 	
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 	
+	// redis command is atomic both read and write operation could be protected by the read lock
 	private final Lock readLock = lock.readLock();
 	
+	// protect state variable in multi-thread environment
 	private final Lock writeLock = lock.writeLock();
 	
 	public JedisCache(String redisPropFile) {
@@ -120,23 +123,15 @@ public class JedisCache implements Cache {
 				
 				jedis = jedisPool.getResource();
 				
-				String ret = jedis.get(key);
+				return jedis.get(key);
 				
-				if(ret == null) {
-					return "";
-				}
-				else {
-					return ret;
-				}
 			}
-			else {
-				return "";
-			}
+			
+			return null;
 		}
 		catch (JedisException e) {
 			LOGGER.error(ExceptionUtils.printStackTraceToString(e));
-			
-			return "";
+			return null;
 		}
 		finally {
 			if(jedis != null) {
@@ -160,7 +155,7 @@ public class JedisCache implements Cache {
 				
 				String state = jedis.set(key, value);
 					
-				if(state.equals("1")) {
+				if(state.equalsIgnoreCase("OK")) {
 					return true;
 				}
 				else {
@@ -196,9 +191,9 @@ public class JedisCache implements Cache {
 				
 				jedis = jedisPool.getResource();
 				
-				Long state = jedis.del(key);
+				long state = jedis.del(key);
 				
-				if(state > 1) {
+				if(state == 1) {
 					return true;
 				}
 				else {

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import ningyuan.pan.webx.util.cache.Cache;
 import ningyuan.pan.webx.util.cache.redis.JedisCache;
+import ningyuan.pan.webx.util.cache.redis.LettuceCache;
 
 /**
  * @author ningyuan
@@ -27,8 +28,10 @@ public class CacheServletContextListener implements ServletContextListener {
 		String cacheName = sce.getServletContext().getInitParameter("cache.name");
 		
 		if(cacheName.equals("RedisCache")) {
-			Cache cache = new JedisCache(sce.getServletContext().getInitParameter("redis.properties.file"));
+			//Cache cache = new JedisCache(sce.getServletContext().getInitParameter("redis.properties.file"));
 	    	
+			Cache cache = new LettuceCache(sce.getServletContext().getInitParameter("redis.properties.file"));
+			
 			cache.open();
 	    		
 			sce.getServletContext().setAttribute(cacheName, cache);

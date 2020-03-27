@@ -140,30 +140,12 @@
             	</exclusions>
 		   </dependency>
 		   
-		   <!--  <dependency>
+		   <dependency>
     			<groupId>io.lettuce</groupId>
     			<artifactId>lettuce-core</artifactId>
-    			<version>${lettuce-core.version}</version> -->
-    		<!--  <exclusions>
-    				<exclusion>
-    					<groupId>io.netty</groupId>
-    					<artifactId>netty-common</artifactId>
-    				</exclusion>
-    				<exclusion>
-    					<groupId>io.netty</groupId>
-    					<artifactId>netty-transport</artifactId>
-    				</exclusion>
-    				<exclusion>
-    					<groupId>io.netty</groupId>
-    					<artifactId>netty-buffer</artifactId>
-    				</exclusion>
-    				<exclusion>
-    					<groupId>io.netty</groupId>
-    					<artifactId>netty-buffer</artifactId>
-    				</exclusion>
-    			</exclusions> -->	
-		    <!-- </dependency> -->
-   	       
+    			<version>${lettuce-core.version}</version>
+    		</dependency>
+   	        
    	       <!-- logging -->
    	       <dependency>
     			<groupId>org.slf4j</groupId>
@@ -227,10 +209,10 @@
    		<groupId>redis.clients</groupId>
     	<artifactId>jedis</artifactId>
     </dependency>
-    <!--  <dependency>
+    <dependency>
     	<groupId>io.lettuce</groupId>
     	<artifactId>lettuce-core</artifactId>
-    </dependency> -->
+    </dependency>
     
     <dependency>
     	<groupId>org.slf4j</groupId>
