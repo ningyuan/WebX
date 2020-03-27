@@ -91,7 +91,7 @@ public class LettuceCache implements Cache {
 			if(state == State.OPEN) {
 				RedisCommands<String, String> syncCommands = connection.sync();
 				
-				syncCommands.flushall();
+				syncCommands.flushdb();
 			}
 		}
 		finally {
