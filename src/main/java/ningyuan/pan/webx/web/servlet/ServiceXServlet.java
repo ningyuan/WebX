@@ -42,22 +42,29 @@ public class ServiceXServlet extends HttpServlet {
         
 		String cacheName = getServletContext().getInitParameter("cache.name");
 		Cache cache = (Cache)getServletContext().getAttribute(cacheName);
-	    
+		
+		ServiceX service = (ServiceX)getServletContext().getAttribute("ServiceX");
+		
 		PrintWriter out = response.getWriter();
-	       
-		// check cache first
-		String name = cache.get("name");
-		if(name == null) {
-			ServiceX service = (ServiceX)getServletContext().getAttribute("ServiceX");
-			name = service.getName();
-			
-			cache.put("name", name);
-			
-			out.write("Call service and set cache: "+name);
-			
+	    
+		if(cache != null) {
+			// check cache first
+			String name = cache.get("name");
+			if(name == null) {
+				
+				name = service.getName();
+				
+				cache.put("name", name);
+				
+				out.write("Call service and set cache: "+name);
+				
+			}
+			else {
+				 out.write("Hit cache: "+name);
+			}
 		}
 		else {
-			 out.write("Hit cache: "+name);
+			out.write("No cache: "+service.getName());
 		}
         
         out.close();
