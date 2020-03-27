@@ -9,6 +9,7 @@ import javax.servlet.ServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ningyuan.pan.util.exception.ExceptionUtils;
 import ningyuan.pan.webx.util.cache.Cache;
 import ningyuan.pan.webx.util.cache.redis.JedisCache;
 import ningyuan.pan.webx.util.cache.redis.LettuceCache;
@@ -28,13 +29,19 @@ public class CacheServletContextListener implements ServletContextListener {
 		String cacheName = sce.getServletContext().getInitParameter("cache.name");
 		
 		if(cacheName.equals("RedisCache")) {
-			//Cache cache = new JedisCache(sce.getServletContext().getInitParameter("redis.properties.file"));
+			try {
+				
+				//Cache cache = new JedisCache(sce.getServletContext().getInitParameter("redis.properties.file"));
 	    	
-			Cache cache = new LettuceCache(sce.getServletContext().getInitParameter("redis.properties.file"));
+				Cache cache = new LettuceCache(sce.getServletContext().getInitParameter("redis.properties.file"));
 			
-			cache.open();
+				cache.open();
 	    		
-			sce.getServletContext().setAttribute(cacheName, cache);
+				sce.getServletContext().setAttribute(cacheName, cache);
+			}
+			catch (Exception e) {
+				LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+			}
 		}
 	}
 
