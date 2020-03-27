@@ -41,7 +41,10 @@
     <listener>
     	<listener-class>ningyuan.pan.webx.web.listener.CacheServletContextListener</listener-class>
     </listener> 
-     
+    <listener>
+    	<listener-class>ningyuan.pan.webx.web.listener.ServiceServletContextListener</listener-class>
+    </listener>
+    
     <listener>
     	<listener-class>ningyuan.pan.webx.web.listener.XHttpSessionListener</listener-class>
     </listener> 

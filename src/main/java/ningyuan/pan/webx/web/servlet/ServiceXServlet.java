@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ningyuan.pan.servicex.impl.ServiceXImpl;
+import ningyuan.pan.webx.util.cache.Cache;
 import ningyuan.pan.servicex.ServiceX;
 
 /**
@@ -40,11 +40,25 @@ public class ServiceXServlet extends HttpServlet {
         
 		response.setContentType("text/html;charset=utf-8");
         
-        ServiceX service = new ServiceXImpl();
-		
-        PrintWriter out = response.getWriter();
-        
-        out.write(service.getName());
+		String cacheName = getServletContext().getInitParameter("cache.name");
+		Cache cache = (Cache)getServletContext().getAttribute(cacheName);
+	    
+		PrintWriter out = response.getWriter();
+	       
+		// check cache first
+		String name = cache.get("name");
+		if(name == null) {
+			ServiceX service = (ServiceX)getServletContext().getAttribute("ServiceX");
+			name = service.getName();
+			
+			cache.put("name", name);
+			
+			out.write("Call service and set cache: "+name);
+			
+		}
+		else {
+			 out.write("Hit cache: "+name);
+		}
         
         out.close();
 	}
