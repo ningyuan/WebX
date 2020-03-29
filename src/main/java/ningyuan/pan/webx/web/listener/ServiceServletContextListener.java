@@ -6,8 +6,9 @@ package ningyuan.pan.webx.web.listener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import ningyuan.pan.servicex.ServiceX;
-import ningyuan.pan.servicex.impl.ServiceXImpl;
+import ningyuan.pan.servicex.XService;
+import ningyuan.pan.servicex.impl.XServiceImpl;
+
 
 /**
  * @author ningyuan
@@ -17,7 +18,7 @@ public class ServiceServletContextListener implements ServletContextListener {
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		ServiceX serviceX = new ServiceXImpl();
+		XService serviceX = new XServiceImpl();
 		
 		sce.getServletContext().setAttribute("ServiceX", serviceX);
 	}

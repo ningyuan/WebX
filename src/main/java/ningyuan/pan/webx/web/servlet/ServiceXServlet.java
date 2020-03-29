@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ningyuan.pan.webx.util.cache.Cache;
-import ningyuan.pan.servicex.ServiceX;
+import ningyuan.pan.servicex.XService;
 
 /**
  * @author ningyuan
@@ -43,7 +43,7 @@ public class ServiceXServlet extends HttpServlet {
 		String cacheName = getServletContext().getInitParameter("cache.name");
 		Cache cache = (Cache)getServletContext().getAttribute(cacheName);
 		
-		ServiceX service = (ServiceX)getServletContext().getAttribute("ServiceX");
+		XService service = (XService)getServletContext().getAttribute("ServiceX");
 		
 		PrintWriter out = response.getWriter();
 	    
