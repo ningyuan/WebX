@@ -11,11 +11,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.cxf.helpers.ServiceUtils;
+import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ningyuan.pan.webx.util.cache.Cache;
 import ningyuan.pan.servicex.XService;
+import ningyuan.pan.servicex.impl.XServiceJDBCImpl;
+import ningyuan.pan.servicex.persistence.dao.UserDAO;
+import ningyuan.pan.servicex.util.GlobalObjectName;
+import ningyuan.pan.servicex.util.ServiceXUtil;
+import ningyuan.pan.util.persistence.DataSourceManager;
 
 /**
  * @author ningyuan
