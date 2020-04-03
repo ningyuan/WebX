@@ -29,6 +29,10 @@
     	<param-name>redis.properties.file</param-name>
     	<param-value>conf/redis.properties</param-value>
     </context-param>
+    <context-param>
+    	<param-name>restful.webservice.target.uris.file</param-name>
+    	<param-value>conf/restful.webservice.target.uris</param-value>
+    </context-param>
      
     <session-config>
 		<session-timeout>2</session-timeout>
@@ -94,10 +98,15 @@
     </servlet>
     
     <servlet>
-    	<servlet-name>ServiceXServlet</servlet-name>
-        <servlet-class>ningyuan.pan.webx.web.servlet.ServiceXServlet</servlet-class>
+    	<servlet-name>XServiceServlet</servlet-name>
+        <servlet-class>ningyuan.pan.webx.web.servlet.XServiceServlet</servlet-class>
     </servlet>
 	
+	<servlet>
+    	<servlet-name>RSXServiceServlet</servlet-name>
+        <servlet-class>ningyuan.pan.webx.web.servlet.RSXServiceServlet</servlet-class>
+    </servlet>
+    
 	<servlet-mapping>
         <servlet-name>StartServlet</servlet-name>
         <url-pattern>/</url-pattern>
@@ -109,7 +118,12 @@
     </servlet-mapping>
     
     <servlet-mapping>
-        <servlet-name>ServiceXServlet</servlet-name>
-        <url-pattern>/servicex</url-pattern>
+        <servlet-name>XServiceServlet</servlet-name>
+        <url-pattern>/xservice</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>RSXServiceServlet</servlet-name>
+        <url-pattern>/rsxservice</url-pattern>
     </servlet-mapping>
 </web-app> 
