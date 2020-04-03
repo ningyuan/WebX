@@ -22,6 +22,8 @@
     <jedis.version>3.2.0</jedis.version>
     <lettuce-core.version>5.2.2.RELEASE</lettuce-core.version>
     
+    <jersey.version>2.30</jersey.version>
+    
 	<slf4j-api.version>1.7.30</slf4j-api.version>
 	<logback-classic.version>1.2.3</logback-classic.version>
 	<slf4j-jdk14.version>1.7.30</slf4j-jdk14.version>
@@ -116,6 +118,22 @@
                 		<artifactId>util</artifactId>
             		</exclusion>
             		<exclusion>
+            			<groupId>org.apache.cxf</groupId>
+   						<artifactId>cxf-rt-frontend-jaxrs</artifactId>
+            		</exclusion>
+            		<exclusion>
+            			<groupId>org.apache.cxf</groupId>
+        				<artifactId>cxf-rt-transports-http-jetty</artifactId>
+            		</exclusion>
+            		<exclusion>
+            			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+    					<artifactId>jackson-jaxrs-json-provider</artifactId>
+    				</exclusion>
+    				<exclusion>
+    					<groupId>org.aspectj</groupId>
+    					<artifactId>aspectjweaver</artifactId>
+    				</exclusion>
+            		<exclusion>
                 		<groupId>org.slf4j</groupId>
                 		<artifactId>slf4j-api</artifactId>
             		</exclusion>
@@ -144,8 +162,30 @@
     			<groupId>io.lettuce</groupId>
     			<artifactId>lettuce-core</artifactId>
     			<version>${lettuce-core.version}</version>
-    		</dependency>
-   	        
+    	   </dependency>
+   	       
+   	       <!-- jax-rs client jersey provider -->
+   	       <dependency>
+    	   		<groupId>org.glassfish.jersey.core</groupId>
+    			<artifactId>jersey-client</artifactId>
+    			<version>${jersey.version}</version>
+		   </dependency>
+		   <dependency>
+    			<groupId>org.glassfish.jersey.inject</groupId>
+    			<artifactId>jersey-hk2</artifactId>
+    			<version>${jersey.version}</version>
+    			<exclusions>
+    				<exclusion>
+    					<groupId>org.glassfish.jersey.core</groupId>
+    					<artifactId>jersey-common</artifactId>
+    				</exclusion>
+    				<exclusion>
+    					<groupId>org.glassfish.hk2.external</groupId>
+    					<artifactId>jakarta.inject</artifactId>
+    				</exclusion>
+    			</exclusions>
+   		   </dependency>
+   		 
    	       <!-- logging -->
    	       <dependency>
     			<groupId>org.slf4j</groupId>
@@ -213,6 +253,15 @@
     	<groupId>io.lettuce</groupId>
     	<artifactId>lettuce-core</artifactId>
     </dependency>
+    
+    <dependency>
+    	 <groupId>org.glassfish.jersey.core</groupId>
+    	 <artifactId>jersey-client</artifactId>
+    </dependency>
+    <dependency>
+    	 <groupId>org.glassfish.jersey.inject</groupId>
+    	 <artifactId>jersey-hk2</artifactId>
+    </dependency> 
     
     <dependency>
     	<groupId>org.slf4j</groupId>

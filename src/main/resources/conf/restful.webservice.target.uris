@@ -1,0 +1,5 @@
+xservice.target.uri = ${xservice.target.uri}
+
+xservice.op.getName = ${xservice.op.getName}
+xservice.op.getUser = ${xservice.op.getUser}
+xservice.op.getRole = ${xservice.op.getRole}

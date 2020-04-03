@@ -11,32 +11,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.cxf.helpers.ServiceUtils;
-import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ningyuan.pan.webx.util.cache.Cache;
 import ningyuan.pan.servicex.XService;
-import ningyuan.pan.servicex.impl.XServiceJDBCImpl;
-import ningyuan.pan.servicex.persistence.dao.UserDAO;
-import ningyuan.pan.servicex.util.GlobalObjectName;
-import ningyuan.pan.servicex.util.ServiceXUtil;
-import ningyuan.pan.util.persistence.DataSourceManager;
 
 /**
  * @author ningyuan
  *
  */
-//@WebServlet("/servicex")
-public class ServiceXServlet extends HttpServlet {
+//@WebServlet("/xservice")
+public class XServiceServlet extends HttpServlet {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceXServlet.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(XServiceServlet.class);
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
