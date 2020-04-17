@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Circles</title>
+
+<script src="https://d3js.org/d3.v5.js"></script>
+
+</head>
+<body>
+	<h3>Try click and double click</h3>
+	<div id="svg-container"></div>
+	<script type="text/javascript">
+		
+		let width = window.innerWidth
+			|| document.documentElement.clientWidth
+			|| document.body.clientWidth;
+		
+		
+		let svg = d3.select("#svg-container")
+			        .append("svg")
+			        .attr("width", width)
+			        .attr("height", 120);
+		
+		let radius = [];
+		
+		/*let circle = svg.selectAll("circle")
+		 				.data(radius)
+		 				.enter()
+			     		.append("circle");*/
+		
+	    // new join method instead of enter and append methods
+		let circle = svg.selectAll("circle")
+						.data(radius)
+					    .join("circle");
+		
+		setInterval(moveCircles, 2000);
+		
+		let click = null;
+		
+		window.addEventListener("click", event => {
+			//console.log(event.screenX+" "+event.screenY);
+			
+			clearTimeout(click);
+			
+			// the function is executed after 300 mili-seconds
+			click = window.setTimeout(function() {
+				radius.push(9 + Math.trunc(Math.random()*75));
+				
+				let dCircle = svg.selectAll("circle")
+				 				 .data(radius);
+				
+				// join the data to the elements
+				dCircle.join(
+					// new data
+					enter => enter.append("circle")
+	     		    			  .attr("cx", event.screenX)
+	     		    			  .attr("cy", 60)
+	     		    			  .attr("r", d => Math.sqrt(d)),
+	     		    // old data
+	     		    update => update.transition()
+	     		    				.duration(2000)
+	     		    				.attr("fill", "#e63209")
+				);
+					
+				// update circles
+				circle = svg.selectAll("circle");
+				
+			}, 300);	
+		});
+		
+		window.addEventListener("dblclick", function(event) {
+			//console.log(event.screenX+" "+event.screenY);
+			
+			clearTimeout(click);
+			
+			radius.shift();
+			
+			svg.selectAll("circle")
+				// data bind is associated with its value
+				// [1,  2,  3] 		[2,   3]
+				// [c1, c2, c3]     [c2, c3]
+				.data(radius, d => d)
+     		    .exit()
+     		    .remove();
+     		    
+     	    /*let dCircle = svg.selectAll("circle")
+				 			 .data(radius);
+
+			dCircle.join(
+				 enter => enter.append("circle"),
+				 update => update.attr("r", d => Math.sqrt(d)),
+				 exit => exit.remove()
+			);*/
+			
+			circle = svg.selectAll("circle");
+		});
+		
+		// move the circles
+		function moveCircles() {
+			circle.attr("cx", function() { return Math.random() * width; });
+		}
+	</script>
+	
+</body>
+</html>
