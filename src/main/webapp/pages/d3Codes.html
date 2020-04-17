@@ -23,9 +23,7 @@
 	      	.attr("viewBox", `0 -20 ${width} 33`);
 		
 		setInterval(changeLetters, 2000);
-	  	
-		const t = svg.transition().duration(2000);
-		
+	  
 		let start = 400;
 			
 	  	function changeLetters() {
@@ -39,12 +37,12 @@
 	                   			  .attr("x", width)
 	                   			  .attr("y", 0)
 	                              .text(d => d)
-	                 			  .call(enter => enter.transition(t).attr("x", (d, i) => start + i * 16)),
+	                 			  .call(enter => enter.transition().duration(1000).attr("x", (d, i) => start + i * 16)),
 	               	update => update.attr("fill", "black")
 	                   				.attr("y", 0)
-	                 				.call(update => update.transition(t).attr("x", (d, i) => start + i * 16)),
+	                 				.call(update => update.transition().attr("x", (d, i) => start + i * 16)),
 	               	exit => exit.attr("fill", "#e63209")
-	   							.call(exit => exit.transition(t).attr("x", -10).remove())
+	   							.call(exit => exit.transition().duration(1000).attr("x", -10).remove())
 	           );
 	  	}
 	  	
