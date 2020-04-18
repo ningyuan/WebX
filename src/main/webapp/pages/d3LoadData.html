@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript" src="js/d3.js"></script>
+
+</head>
+<body>
+	
+	<script type="text/javascript">
+		let matrix = [
+	        [1, 2, 3, 4],
+	        [5, 6, 7, 8],
+	        [9, 10, 11, 12],
+	        [13, 14, 15, 16]
+	    ];
+
+		/*let tr = d3.select("body")
+				   .append("table")  
+				   .selectAll("tr")  
+				   .data(matrix)     
+				   .enter()           
+				   .append("tr");*/
+
+		/*let td = tr.selectAll("td")
+				   .data(d => d)
+				   .enter()    
+                   .append("td") 
+                   .text(d => d);*/
+                   
+        let tr = d3.select("body")
+				   .append("table")  
+				   .selectAll("tr")  
+				   .data(matrix)     
+				   .join("tr")
+				   .selectAll("td")
+				   .data(d => d)
+				   .join("td")
+				   .text(d => d); 
+       	
+        // firefox could not allow a local file access
+        // set "privacy.file_unique_origin" to false
+        
+     	d3.csv("data/test.csv", function(data) {
+        	console.log(data);
+        });
+        
+     	d3.json("data/test.json", function(data) {
+        	console.log(data);
+        });
+     	
+     	d3.tsv("data/test.tsv", function(data) {
+        	console.log(data);
+        });
+	</script>
+</body>
+</html>
