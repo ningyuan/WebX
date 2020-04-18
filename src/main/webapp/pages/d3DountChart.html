@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dount Chart</title>
+
+<script src="https://d3js.org/d3.v5.js"></script>
+<script type="text/javascript" src="js/d3DountChart.js"></script>
+
+</head>
+<body>
+	<h3>Try click</h3>
+	<script type="text/javascript">
+		const arcs = pie(data);
+
+	  	const svg = d3.select("body")
+	  				  .append("svg")
+	      			  .attr("viewBox", [-width / 2, -height / 2 - 50, 1000, 500]);
+	  		
+		svg.selectAll("g")
+	    	.data(arcs)
+	       	.join("g")
+	       	.append("path")
+	       	.attr("fill", d => color(d.data.id))
+		    .attr("d", arc);
+		    
+		// this key word can not be used in => function
+	  	d3.selectAll("svg path").on("mouseover", function(event) {
+	  		d3.select(this).attr("fill", "gray");
+	  	});
+	  	
+	  	d3.selectAll("svg path").on("mouseout", function(event) {
+	  		d3.select(this).attr("fill", d => color(d.data.id));
+	  	});
+	  	
+	  	d3.selectAll("svg g").on("click", function(event) {
+	  		d3.select(this).transition().duration(1000).attr("transform", "scale(1.5)")
+	  					   .transition().duration(1000).attr("transform", "scale(1)");	
+	  	});
+	  	
+	</script>
+</body>
+</html>
