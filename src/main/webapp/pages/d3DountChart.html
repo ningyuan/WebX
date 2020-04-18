@@ -9,16 +9,18 @@
 
 </head>
 <body>
+	<h3>Try click</h3>
 	<script type="text/javascript">
 		const arcs = pie(data);
 
 	  	const svg = d3.select("body")
 	  				  .append("svg")
-	      			  .attr("viewBox", [-width / 2, -height / 2, width, height]);
+	      			  .attr("viewBox", [-width / 2, -height / 2 - 50, 1000, 500]);
 	  		
-	  	svg.selectAll("path")
+		svg.selectAll("g")
 	    	.data(arcs)
-	       	.join("path")
+	       	.join("g")
+	       	.append("path")
 	       	.attr("fill", d => color(d.data.id))
 		    .attr("d", arc);
 		    
@@ -30,6 +32,12 @@
 	  	d3.selectAll("svg path").on("mouseout", function(event) {
 	  		d3.select(this).attr("fill", d => color(d.data.id));
 	  	});
+	  	
+	  	d3.selectAll("svg g").on("click", function(event) {
+	  		d3.select(this).transition().duration(1000).attr("transform", "scale(1.5)")
+	  					   .transition().duration(1000).attr("transform", "scale(1)");	
+	  	});
+	  	
 	</script>
 </body>
 </html>

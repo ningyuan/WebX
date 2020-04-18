@@ -24,7 +24,7 @@ let color = d3.scaleOrdinal()
 			  .domain(data.map(d => d.id))
 			  .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), data.length).reverse());
 
-let width = 800;
+let width = 1000;
 let height = 200;
  
 let arc = d3.arc().innerRadius(Math.min(width, height) / 2 * 0.67).outerRadius(Math.min(width, height) / 2 - 1);
