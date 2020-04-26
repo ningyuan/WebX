@@ -11,7 +11,7 @@ import javax.servlet.ServletContextListener;
 import org.apache.ibatis.session.SqlSession;
 
 import ningyuan.pan.servicex.XService;
-import ningyuan.pan.servicex.impl.XServiceJDBCImpl;
+import ningyuan.pan.servicex.impl.XServiceDAOImpl;
 import ningyuan.pan.servicex.impl.XServiceMybatisImpl;
 import ningyuan.pan.servicex.persistence.dao.UserDAO;
 import ningyuan.pan.servicex.persistence.dao.impl.UserDAOJDBCImpl;
@@ -55,7 +55,7 @@ public class ServiceServletContextListener implements ServletContextListener {
 				dataSourceManager.removeAndCloseThreadLocalConnection();
 			}
 			
-			sce.getServletContext().setAttribute("ServiceX", new XServiceJDBCImpl());
+			sce.getServletContext().setAttribute("ServiceX", new XServiceDAOImpl());
 		}
 	}
 
