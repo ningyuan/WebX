@@ -23,7 +23,7 @@
     </context-param>
     <context-param>
     	<param-name>cache.name</param-name>
-      	<param-value>RedisCache</param-value>
+      	<param-value>Redis</param-value>
     </context-param>
     <context-param>
     	<param-name>redis.properties.file</param-name>
