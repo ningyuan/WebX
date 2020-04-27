@@ -9,6 +9,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ningyuan.pan.servicex.XService;
 import ningyuan.pan.servicex.impl.XServiceDAOImpl;
@@ -21,6 +23,8 @@ import ningyuan.pan.util.exception.ExceptionUtils;
 import ningyuan.pan.util.persistence.DataSourceManager;
 import ningyuan.pan.util.persistence.JDBCDataSourceManager;
 import ningyuan.pan.util.persistence.MybatisDataSourceManager;
+import ningyuan.pan.webx.util.ServiceName;
+import ningyuan.pan.webx.web.servlet.XServiceServlet;
 
 
 /**
@@ -28,6 +32,8 @@ import ningyuan.pan.util.persistence.MybatisDataSourceManager;
  *
  */
 public class ServiceServletContextListener implements ServletContextListener {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceServletContextListener.class);
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -46,16 +52,21 @@ public class ServiceServletContextListener implements ServletContextListener {
 			ServiceXUtil.getInstance().setGelobalObject(GlobalObjectName.MYBATIS_DATA_SOURCE_MANAGER, dataSourceManager);
 			//ServiceXUtil.getInstance().setGelobalObject(GlobalObjectName.JDBC_DATA_SOURCE_MANAGER, dataSourceManager);
 			
-			sce.getServletContext().setAttribute("ServiceX", serviceX);
+			sce.getServletContext().setAttribute(ServiceName.X_SERVICE.getName(), serviceX);
 		}
 		catch(Exception e) {
-			ExceptionUtils.printStackTraceToString(e);
+			LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
 			
 			if(dataSourceManager != null) {
-				dataSourceManager.removeAndCloseThreadLocalConnection();
+				try {
+					dataSourceManager.close();
+				} catch (Exception e1) {
+					LOGGER.debug(ExceptionUtils.printStackTraceToString(e1));
+				}
 			}
 			
-			sce.getServletContext().setAttribute("ServiceX", new XServiceDAOImpl());
+			ServiceXUtil.getInstance().removeGelobalObject(GlobalObjectName.MYBATIS_DATA_SOURCE_MANAGER);
+			sce.getServletContext().removeAttribute(ServiceName.X_SERVICE.getName());
 		}
 	}
 
@@ -66,10 +77,15 @@ public class ServiceServletContextListener implements ServletContextListener {
 		//DataSourceManager<Connection> dataSourceManager = (DataSourceManager<Connection>)ServiceXUtil.getInstance().getGelobalObject(GlobalObjectName.JDBC_DATA_SOURCE_MANAGER);
 		
 		if(dataSourceManager != null) {
-			dataSourceManager.removeAndCloseThreadLocalConnection();
+			try {
+				dataSourceManager.close();
+			} catch (Exception e) {
+				LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+			}
 		}
 		
-		sce.getServletContext().removeAttribute("ServiceX");
+		ServiceXUtil.getInstance().removeGelobalObject(GlobalObjectName.MYBATIS_DATA_SOURCE_MANAGER);
+		sce.getServletContext().removeAttribute(ServiceName.X_SERVICE.getName());
 	}
 
 }
