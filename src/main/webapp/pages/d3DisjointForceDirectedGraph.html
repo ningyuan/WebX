@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Disjoint Force-Directed Graph</title>
+
+<script src="https://d3js.org/d3.v5.js"></script>
+<script type="text/javascript" src="js/d3DisjointForceDirectedGraph.js"></script>
+
+<script type="text/javascript">
+	let data;
+	let width = 1200;
+	let height = 350;
+
+	window.onload = onload();
+		
+	function onload(){
+		data = { "nodes": [
+			{"id":"0", "name":"pan", "radius":7, "color":"#64bd7d"},
+			{"id":"1", "name":"root", "radius":5, "color":"#a0e8b4"},
+			{"id":"2", "name":"lee", "radius":7, "color":"#64bd7d"},
+			{"id":"3", "name":"admin", "radius":5, "color":"#a0e8b4"},
+			{"id":"4", "name":"common", "radius":5, "color":"#a0e8b4"},
+			{"id":"5", "name":"zhang", "radius":7, "color":"#64bd7d"},
+			{"id":"6", "name":"common", "radius":5, "color":"#a0e8b4"},
+		  ],
+ "links": [
+	 		{"source":"0", "target":"1"},
+	 		{"source":"2", "target":"3"},
+	 		{"source":"2", "target":"4"},
+	 		{"source":"5", "target":"6"},
+          ]		
+		};
+	};
+	
+	function refresh() {
+		paintGraph(data);
+	};
+</script>
+</head>
+<body>
+	<input type="button" onclick="refresh()" value="Refresh"/>
+	<svg id="chart-container">
+		<g id="lines"></g>
+		<g id="circles"></g>
+	</svg>
+	<script type="text/javascript">
+		paintGraph(data);
+	</script>
+</body>
+</html>
