@@ -2,7 +2,7 @@
  * 
  */
 
-function loadJSON(path, process)
+function asyncLoadJSON(path, callback)
 {
     var xhr = new XMLHttpRequest();
     
@@ -10,15 +10,15 @@ function loadJSON(path, process)
     {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
-                process(JSON.parse(xhr.responseText)); 
+                callback(JSON.parse(xhr.responseText)); 
             } 
             else {
-                process(null);
+                callback(null);
             }
         }
     };
     
   
-    xhr.open("GET", path, false);
+    xhr.open("GET", path, true);
     xhr.send();
 }

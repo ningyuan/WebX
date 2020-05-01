@@ -16,16 +16,16 @@
 	window.onload = onload();
 		
 	function onload(){
-		loadGraphData();
+		asyncLoadAndPaintGraph();
 	};
 	
-	function loadGraphData() {
+	function asyncLoadAndPaintGraph() {
 		// '/' is interpreted as root path http:/host:port/
-		// loaded data is assigned to json.data or null if an error occurs
-		loadJSON('/WebX/xservice/allusers.json', buildData);
+		asyncLoadJSON('/WebX/xservice/allusers.json', buildDataAndPaint);
+		
 	};
 	
-	function buildData(users) {
+	function buildDataAndPaint(users) {
 		if(users != null) {
 			/*
 			 * data = {
@@ -76,11 +76,12 @@
 		else {
 			data = {"nodes":[], "links":[]};
 		}
+		
+		paintGraph(data);
 	};
 
 	function refresh() {
-		loadGraphData();
-		paintGraph(data)
+		asyncLoadAndPaintGraph();
 	};
 </script>
 </head>
@@ -90,8 +91,5 @@
 		<g id="lines"></g>
 		<g id="circles"></g>
 	</svg>
-	<script type="text/javascript">
-		paintGraph(data);
-	</script>
 </body>
 </html>
