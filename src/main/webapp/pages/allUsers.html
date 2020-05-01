@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Users</title>
+
+<script src="https://d3js.org/d3.v5.js"></script>
+<script type="text/javascript" src="/WebX/pages/js/d3DisjointForceDirectedGraph.js"></script>
+<script type="text/javascript" src="/WebX/pages/js/util.js"></script>
+
+<script type="text/javascript">
+	let data = {};
+	let width = 1200;
+	let height = 350;
+
+	window.onload = onload();
+		
+	function onload(){
+		loadGraphData();
+	};
+	
+	function loadGraphData() {
+		// '/' is interpreted as root path http:/host:port/
+		// loaded data is assigned to json.data or null if an error occurs
+		loadJSON('/WebX/xservice/allusers.json', buildData);
+	};
+	
+	function buildData(users) {
+		if(users != null) {
+			/*
+			 * data = {
+			 *			"nodes" : [{"id", "name", "radius", "color"}, ...],
+			 *			"links" : [{"source", "target"}, ...]
+			 *		  }
+			 */
+			let nodeID = 0;
+			let nodes = [];
+			let links = [];
+			
+			for(let i = 0; i < users.length; i++) {
+				let user = users[i];
+				
+				let node = {};
+				let uID = nodeID;
+				node.id = nodeID++;
+				node.name = user.firstName+" "+user.lastName;
+				node.radius = 7;
+				node.color = "#64bd7d";
+				
+				nodes.push(node);
+				
+				let roles = user.roles;
+				for(let j = 0; j < roles.length; j++) {
+					let role = roles[j];
+					
+					let link = {};
+					link.source = uID;
+					link.target = nodeID;
+					links.push(link);
+					
+					let node = {};
+					node.id = nodeID++;
+					node.name = role.name;
+					node.radius = 5;
+					node.color = "#a0e8b4";
+					
+					nodes.push(node);
+				}
+			}
+			
+			data.nodes = nodes;
+			data.links = links;
+			
+			console.log(data);
+		}
+		else {
+			data = {"nodes":[], "links":[]};
+		}
+	};
+
+	function refresh() {
+		loadGraphData();
+		paintGraph(data)
+	};
+</script>
+</head>
+<body>
+	<input type="button" onclick="refresh()" value="Refresh"/>
+	<svg id="chart-container">
+		<g id="lines"></g>
+		<g id="circles"></g>
+	</svg>
+	<script type="text/javascript">
+		paintGraph(data);
+	</script>
+</body>
+</html>

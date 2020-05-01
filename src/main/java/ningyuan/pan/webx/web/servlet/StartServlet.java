@@ -31,8 +31,15 @@ public class StartServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOGGER.debug("doGet()");
+		LOGGER.debug(request.getContextPath());
+		LOGGER.debug(request.getPathInfo());
+		LOGGER.debug(request.getPathTranslated());
+		LOGGER.debug(request.getRequestURL().toString());
+		LOGGER.debug(request.getRequestURI());
 		
-		request.getRequestDispatcher("./pages/start.jsp").forward(request, response);
+	
+		// path starting with '/' is interpreted as relative to current context root
+		request.getRequestDispatcher("/pages/start.jsp").forward(request, response);
 	}
 
 	@Override
