@@ -101,6 +101,16 @@
     	<servlet-name>XServiceServlet</servlet-name>
         <servlet-class>ningyuan.pan.webx.web.servlet.XServiceServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+    	<servlet-name>XServiceAllUsersServlet</servlet-name>
+        <servlet-class>ningyuan.pan.webx.web.servlet.XServiceAllUsersPageServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+    	<servlet-name>XServiceAllUsersJSONServlet</servlet-name>
+        <servlet-class>ningyuan.pan.webx.web.servlet.XServiceAllUsersServlet</servlet-class>
+    </servlet>
 	
 	<servlet>
     	<servlet-name>RSXServiceServlet</servlet-name>
@@ -109,7 +119,7 @@
     
 	<servlet-mapping>
         <servlet-name>StartServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/start</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>
@@ -120,6 +130,16 @@
     <servlet-mapping>
         <servlet-name>XServiceServlet</servlet-name>
         <url-pattern>/xservice</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+    	<servlet-name>XServiceAllUsersServlet</servlet-name>
+    	<url-pattern>/xservice/allusers.html</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+    	<servlet-name>XServiceAllUsersJSONServlet</servlet-name>
+    	<url-pattern>/xservice/allusers.json</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>
