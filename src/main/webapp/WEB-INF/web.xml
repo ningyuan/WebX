@@ -111,6 +111,16 @@
     	<servlet-name>XServiceAllUsersJSONServlet</servlet-name>
         <servlet-class>ningyuan.pan.webx.web.servlet.XServiceAllUsersServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+    	<servlet-name>XServiceAllRolesServlet</servlet-name>
+        <servlet-class>ningyuan.pan.webx.web.servlet.XServiceAllRolesPageServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+    	<servlet-name>XServiceAllRolesJSONServlet</servlet-name>
+        <servlet-class>ningyuan.pan.webx.web.servlet.XServiceAllRolesServlet</servlet-class>
+    </servlet>
 	
 	<servlet>
     	<servlet-name>RSXServiceServlet</servlet-name>
@@ -140,6 +150,16 @@
     <servlet-mapping>
     	<servlet-name>XServiceAllUsersJSONServlet</servlet-name>
     	<url-pattern>/xservice/allusers.json</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+    	<servlet-name>XServiceAllRolesServlet</servlet-name>
+    	<url-pattern>/xservice/allroles.html</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+    	<servlet-name>XServiceAllRolesJSONServlet</servlet-name>
+    	<url-pattern>/xservice/allroles.json</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

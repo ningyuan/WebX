@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Roles</title>
+
+<script src="https://d3js.org/d3.v5.js"></script>
+<script type="text/javascript" src="/WebX/pages/js/d3CollapsibleTree.js"></script>
+<script type="text/javascript" src="/WebX/pages/js/util.js"></script>
+
+<script type="text/javascript">
+	let root = {};
+	
+	window.onload = onload();
+	
+	function onload(){
+		asyncLoadAndPaintTree();
+	};
+	
+	function asyncLoadAndPaintTree() {
+		// '/' is interpreted as root path http:/host:port/
+		asyncLoadJSON('/WebX/xservice/allroles.json', buildDataAndPaint);
+	};
+	
+	function buildDataAndPaint(roles) {
+		/*
+		 * data = {
+		 *			"name" : "",
+		 *			"children" : [
+		 *	 						{"name":"", "children":[{...}]},
+		 *	 						{"name":"", "children":[{...}]}
+		 *	 					 ]
+		 *		  }
+		 */
+		let data = {"name" : "roles",
+					"children" : []
+				   };
+		
+		if(roles != null) {
+			for(let i = 0; i < roles.length; i++) {
+				let role = roles[i];
+				
+				let r = {};
+				r.name = role.name;
+				r.children = [];
+				
+				let users = role.users;
+				for(let j = 0; j < users.length; j++) {
+					let user = users[j];
+					
+					let u = {};
+					u.name = user.firstName + " " + user.lastName;
+					u.children = [];
+					
+					r.children.push(u);
+				}
+				
+				data.children.push(r);
+			}
+			
+			console.log(data);
+		}
+	
+		makeRoot(data);
+		
+		paintTree(root);
+	};
+	
+	function refresh() {
+		asyncLoadAndPaintTree();
+	};
+</script>
+</head>
+<body>
+	<input type="button" onclick="refresh()" value="Refresh"/>
+	<svg id="tree-container">
+		<g id="g-link"></g>
+		<g id="g-node"></g>
+	</svg>
+</body>
+</html>
