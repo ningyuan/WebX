@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Collapsible Tree</title>
+
+<script src="https://d3js.org/d3.v5.js"></script>
+<script type="text/javascript" src="js/d3CollapsibleTree.js"></script>
+<script type="text/javascript">
+	let root = {};
+	
+	window.onload = onload();
+	
+	function onload(){
+		let data = {"name" : "roles",
+			   	"children" : [
+			   					{"name" : "root", 
+			   					 "children" : [
+			   							 		{"name" : "pan",
+			   							 		 "children" : []
+			   							 		}
+			   						          ]
+			   					},
+			   					{"name" : "admin",
+			   					 "children" : [
+			   							 		{"name" : "wang",
+			   							 		 "children" : []
+			   							 		},
+			   							 		{"name" : "lee",
+			   							 		 "children" : []
+			   							 		}
+			   						          ]
+			   					},
+			   					{"name" : "guest",
+			   					 "children" : [
+								 				{"name" : "lee",
+								 				 "children" : []
+								 				},
+								 				{"name" : "zhang",
+								 				 "children" : []
+								 				}
+								 			  ]
+			   					}
+			   			 ]
+			   };
+		
+		
+		makeRoot(data);
+	}
+	
+	function refresh() {
+		data = {"name" : "roles",
+			   	"children" : [
+			   					{"name" : "root", 
+			   					 "children" : [
+			   							 		{"name" : "pan",
+			   							 		 "children" : [
+			   							 			 			{"name" : "123",
+			   							 			             "children" : []
+			   							 		 				}
+			   							 		 			  ]
+			   							 		}
+			   						          ]
+			   					},
+			   					{"name" : "admin",
+			   					 "children" : [
+			   							 		{"name" : "wang",
+			   							 		 "children" : []
+			   							 		},
+			   							 		{"name" : "lee",
+			   							 		 "children" : []
+			   							 		}
+			   						          ]
+			   					}
+			   			 ]
+			   };
+		
+		makeRoot(data);
+		paintTree(root);
+	};
+</script>
+
+</head>
+<body>
+	<input type="button" onclick="refresh()" value="Refresh"/>
+	<svg id="tree-container">
+		<g id="g-link"></g>
+		<g id="g-node"></g>
+	</svg>
+	<script type="text/javascript">
+	  	paintTree(root);
+	</script>
+</body>
+</html>
