@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Properties;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.AsyncEvent;
+import javax.servlet.AsyncListener;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ningyuan.pan.util.exception.ExceptionUtils;
-
+	
 /**
  * @author ningyuan
  *
  */
-//@WebServlet("/rsxservice")
+//@WebServlet(urlPatterns={"/rsxservice"}, asyncSupported=true)
 public class RSXServiceServlet extends HttpServlet {
 	/**
 	 * 
@@ -75,29 +78,94 @@ public class RSXServiceServlet extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
         
 		response.setContentType("text/plain;charset=utf-8");
-        
-		PrintWriter out = response.getWriter();
 		
-		try {
-			WebTarget serviceBase = RSClient.target(RSServiceURIs.getProperty("xservice.target.uri"));
+		final AsyncContext asyncContext = request.startAsync(request, response);
+		
+		asyncContext.setTimeout(5000);
+		
+		asyncContext.addListener(new AsyncListener() {
+			@Override
+			public void onTimeout(AsyncEvent event) throws IOException {
+				LOGGER.debug("Async task timeout " + event);
+				
+				/*
+				 * XXX cause:
+				 *     PM org.apache.catalina.connector.CoyoteAdapter checkRecycled
+				 *	   INFO: Encountered a non-recycled response and recycled it forcedly.
+                 *     org.apache.catalina.connector.CoyoteAdapter$RecycleRequiredException
+				 */
+				try (PrintWriter out = response.getWriter()) {
+					response.getWriter().write("Async task timeout");
+				}
+				finally {
+					asyncContext.complete();
+				}
+			}
 			
-			String name = serviceBase.path(RSServiceURIs.getProperty("xservice.op.getName"))
-					                 .request(MediaType.TEXT_PLAIN)
-					                 .get(String.class);
+			@Override
+			public void onStartAsync(AsyncEvent event) throws IOException {}
 			
-			out.write(name+"   ");
+			@Override
+			public void onError(AsyncEvent event) throws IOException {
+				LOGGER.debug("Async task error " + event);
+				
+				try (PrintWriter out = response.getWriter()) {
+					response.getWriter().write("Async task error");
+				}
+				finally {
+					asyncContext.complete();
+				}
+			}
 			
-			String user = serviceBase.path(RSServiceURIs.getProperty("xservice.op.getUser"))			  
-				                     .request(MediaType.APPLICATION_JSON)
-				                     .get(String.class);
-			
-			out.write(user);
-		}
-		catch (Exception e) {
-			LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
-		}
-		finally {
-			out.close();
-		}	  
-	}	
+			@Override
+			public void onComplete(AsyncEvent event) throws IOException {}
+		});
+		
+		// start a new thread from the container
+		asyncContext.start(new Runnable() {
+			@Override
+			public void run() {
+				PrintWriter out = null;
+				
+				try {
+					out = response.getWriter();
+					
+					WebTarget serviceBase = RSClient.target(RSServiceURIs.getProperty("xservice.target.uri"));
+					
+					String name = serviceBase.path(RSServiceURIs.getProperty("xservice.op.getName"))
+							                 .request(MediaType.TEXT_PLAIN)
+							                 .get(String.class);
+					
+					out.write(name+"   ");
+					
+					String user = serviceBase.path(RSServiceURIs.getProperty("xservice.op.getUser"))			  
+						                     .request(MediaType.APPLICATION_JSON)
+						                     .get(String.class);
+					
+					out.write(user);
+				}
+				catch (Exception e) {
+					LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+				}
+				finally {
+					try {
+						if(out != null) {
+							out.close();
+						}
+					}
+					catch(Exception e) {
+						LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+					}
+					finally {
+						try {
+							asyncContext.complete();
+						}
+						catch(Exception e) {
+							LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+						}
+					}
+				}
+			}
+		});
+	}
 }

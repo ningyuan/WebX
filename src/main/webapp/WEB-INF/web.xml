@@ -125,6 +125,7 @@
 	<servlet>
     	<servlet-name>RSXServiceServlet</servlet-name>
         <servlet-class>ningyuan.pan.webx.web.servlet.RSXServiceServlet</servlet-class>
+        <async-supported>true</async-supported>
     </servlet>
     
 	<servlet-mapping>
