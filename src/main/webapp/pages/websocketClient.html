@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Websocket Client</title>
+
+<script type="text/javascript">
+	let websocket = null;
+	
+	window.onload = onload();
+	window.onbeforeunload = beforeunload();
+	
+	function onload(){
+		initWebsocket();
+	};
+	
+	function beforeunload() {
+		closeWebsocket();
+	};
+	
+	function initWebsocket() {
+		if(window.WebSocket) {
+			websocket = new WebSocket("ws://127.0.0.1:8080/WebX/websocket/xservice");
+			
+			websocket.onopen = function(event) {
+				console.log("websocket.onopen");
+				websocket.send("Hello!");
+			};
+			
+			websocket.onclose = function(event) { 
+				console.log("websocket.onclose");
+				console.log(event);
+		    }; 
+		    
+		    websocket.onmessage = function(event) { 
+		    	console.log("websocket.onmessage");
+				console.log(event.data);
+	        };
+	        
+	        websocket.onerror = function(event) { 
+	        	console.log("websocket.onerror");
+				console.log(event);
+	        };
+		}
+		else {
+			websocket = null;
+		}
+	};
+	
+	function openWebsocket() {
+		if(websocket != null && websocket.readyState == WebSocket.CLOSED) {
+			initWebsocket();
+			console.log("openWebsocket()");
+		}
+	};
+	
+	function closeWebsocket() {
+		if(websocket != null && websocket.readyState == WebSocket.OPEN) {
+			websocket.close();
+			console.log("closeWebsocket()");
+		}
+	};
+</script>
+
+</head>
+<body>
+	<input type="button" onclick="openWebsocket()" value="Start"/>
+	<input type="button" onclick="closeWebsocket()" value="Stop"/>
+</body>
+</html>
