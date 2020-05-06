@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Line Chart</title>
+
+<script src="https://d3js.org/d3.v5.js"></script>
+<script type="text/javascript" src="js/d3LineChart.js"></script>
+<script type="text/javascript">
+	let data = [];
+	let timerID = null;
+	let interval = 100;
+	
+	window.onload = onload();
+	
+	function onload() {
+		timerID = setInterval(buildDataAndPaint, interval);
+	};
+	
+	function start() {
+		if(timerID == null) {
+			timerID = setInterval(buildDataAndPaint, interval);
+		}
+	};
+	
+	function stop() {
+		if(timerID != null) {
+			clearInterval(timerID);
+			timerID = null;
+		}
+	};
+	
+	function buildDataAndPaint() {
+		let r = Math.random();
+		
+		if(data.length < numX) {
+			calculateNextValue(r);
+			
+			data.unshift({"step" : 0, "value" : value});
+			
+			for(let i = 1; i < data.length; i++) {
+				data[i].step = i;
+			}
+		}
+		else {
+			data.pop();
+			
+			calculateNextValue(r);
+			
+			data.unshift({"step" : 0, "value" : value});
+			
+			for(let i = 1; i < data.length; i++) {
+				data[i].step = i;
+			}
+		}
+		
+		svg.select("#path")
+		   .transition()
+		   .attr("d", line(data));
+	};
+</script>
+
+</head>
+<body>
+	<input type="button" onclick="start()" value="Start"/>
+	<input type="button" onclick="stop()" value="Stop"/>
+	<svg id="chart-container">
+		<path id="path"></path>
+	</svg>
+	<script type="text/javascript">
+		const svg = d3.select("body")
+					  .select("#chart-container")
+    				  .attr("viewBox", [0, 0, width, height]);
+
+		svg.select("#path")
+    	   .attr("fill", "none")
+    	   .attr("stroke", "gray")
+    	   .attr("stroke-width", 1.5)
+    	   .attr("stroke-linejoin", "round")
+    	   .attr("stroke-linecap", "round")
+    	   .attr("d", line(data));
+	</script>
+</body>
+</html>
