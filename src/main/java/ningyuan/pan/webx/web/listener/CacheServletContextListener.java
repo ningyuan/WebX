@@ -35,9 +35,9 @@ public class CacheServletContextListener implements ServletContextListener {
 			
 			try {
 				
-				//Cache cache = new JedisCache(sce.getServletContext().getInitParameter("redis.properties.file"));
+				cache = new JedisCache(sce.getServletContext().getInitParameter("redis.properties.file"));
 	    	
-				cache = new LettuceCache(sce.getServletContext().getInitParameter("redis.properties.file"));
+				//cache = new LettuceCache(sce.getServletContext().getInitParameter("redis.properties.file"));
 			
 				cache.open();
 	    		
