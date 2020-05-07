@@ -19,7 +19,7 @@ let y = d3.scaleLinear()
     .range([height - margin.bottom, margin.top]);
 
 let line = d3.line()
-	.x(d => x(d.step))
+	.x((d, i) => x(i))
 	.y(d => y(d.value));
 
 let value = 2;

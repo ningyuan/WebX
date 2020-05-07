@@ -33,26 +33,13 @@
 	function buildDataAndPaint() {
 		let r = Math.random();
 		
-		if(data.length < numX) {
-			calculateNextValue(r);
-			
-			data.unshift({"step" : 0, "value" : value});
-			
-			for(let i = 1; i < data.length; i++) {
-				data[i].step = i;
-			}
-		}
-		else {
+		if(data.length >= numX){
 			data.pop();
-			
-			calculateNextValue(r);
-			
-			data.unshift({"step" : 0, "value" : value});
-			
-			for(let i = 1; i < data.length; i++) {
-				data[i].step = i;
-			}
 		}
+		
+		calculateNextValue(r);
+		
+		data.unshift({"value" : value});
 		
 		svg.select("#path")
 		   .transition()
