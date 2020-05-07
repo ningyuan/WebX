@@ -42,7 +42,7 @@ public class XServiceEndpoint {
 				public void run() {
 					while(!Thread.currentThread().isInterrupted()) {
 						try {
-							String num = String.valueOf(Math.round((Math.random()*100)));
+							String num = String.valueOf(Math.random());
 							session.getBasicRemote().sendText(num);
 							
 							LOGGER.trace(num);
