@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pulse</title>
+
+<script src="https://d3js.org/d3.v5.js"></script>
+<script type="text/javascript" src="/WebX/pages/js/d3LineChart.js"></script>
+<script type="text/javascript">
+	let data = [];
+	let websocket = null;
+
+	window.onload = onload();
+	window.onbeforeunload = beforeunload();
+
+	function onload(){
+		initWebsocket();
+	};
+
+	function beforeunload() {
+		closeWebsocket();
+	};
+
+	function initWebsocket() {
+		if(window.WebSocket) {
+			websocket = new WebSocket("ws://127.0.0.1:8080/WebX/websocket/pulse");
+		
+			websocket.onopen = function(event) {
+				console.log("websocket.onopen");
+			};
+			
+			websocket.onclose = function(event) { 
+				console.log("websocket.onclose");
+			}; 
+			
+	    	websocket.onmessage = function(event) { 
+	        	console.log("websocket.onmessage");
+	    		console.log(event.data);
+	    		buildDataAndPaint(event.data);
+	        };
+        
+        	websocket.onerror = function(event) { 
+            	console.log("websocket.onerror");
+            };
+		}
+		else {
+			websocket = null;
+		}
+	};
+	
+	function openWebsocket() {
+		if(websocket != null && websocket.readyState == WebSocket.CLOSED) {
+			initWebsocket();
+			console.log("openWebsocket()");
+		}
+	};
+
+	function closeWebsocket() {
+		if(websocket != null && websocket.readyState == WebSocket.OPEN) {
+			websocket.close();
+			console.log("closeWebsocket()");
+		}
+	};
+	
+	function buildDataAndPaint(r) {
+		
+		if(data.length >= numX){
+			data.pop();
+		}
+		
+		calculateNextValue(r);
+		
+		data.unshift({"value" : value});
+		
+		svg.select("#path")
+		   .transition()
+		   .attr("d", line(data));
+	};
+</script>
+	
+</head>
+<body>
+	<input type="button" onclick="openWebsocket()" value="Start"/>
+	<input type="button" onclick="closeWebsocket()" value="Stop"/>
+	<svg id="chart-container">
+		<path id="path"></path>
+	</svg>
+	<script type="text/javascript">
+		const svg = d3.select("body")
+					  .select("#chart-container")
+    				  .attr("viewBox", [0, 0, width, height]);
+
+		svg.select("#path")
+    	   .attr("fill", "none")
+    	   .attr("stroke", "gray")
+    	   .attr("stroke-width", 1.5)
+    	   .attr("stroke-linejoin", "round")
+    	   .attr("stroke-linecap", "round")
+    	   .attr("d", line(data));
+	</script>
+</body>
+</html>

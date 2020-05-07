@@ -20,7 +20,7 @@
 	
 	function initWebsocket() {
 		if(window.WebSocket) {
-			websocket = new WebSocket("ws://127.0.0.1:8080/WebX/websocket/xservice");
+			websocket = new WebSocket("ws://127.0.0.1:8080/WebX/websocket/pulse");
 			
 			websocket.onopen = function(event) {
 				console.log("websocket.onopen");

@@ -23,9 +23,9 @@ import ningyuan.pan.util.exception.ExceptionUtils;
  * @author ningyuan
  *
  */
-@ServerEndpoint("/websocket/xservice")
-public class XServiceEndpoint {
-	private static final Logger LOGGER = LoggerFactory.getLogger(XServiceEndpoint.class);
+@ServerEndpoint("/websocket/pulse")
+public class PulseEndpoint {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PulseEndpoint.class);
 	
 	private static final String MESSAGE_THREAD = "mt";
 	
@@ -45,9 +45,7 @@ public class XServiceEndpoint {
 							String num = String.valueOf(Math.random());
 							session.getBasicRemote().sendText(num);
 							
-							LOGGER.trace(num);
-							
-							Thread.sleep(1000);
+							Thread.sleep(200);
 						}
 						catch (IOException ioe) {
 							LOGGER.debug(ExceptionUtils.printStackTraceToString(ioe));

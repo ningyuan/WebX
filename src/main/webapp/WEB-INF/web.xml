@@ -123,6 +123,11 @@
     </servlet>
 	
 	<servlet>
+    	<servlet-name>PulseServlet</servlet-name>
+        <servlet-class>ningyuan.pan.webx.web.servlet.PulsePageServlet</servlet-class>
+    </servlet>
+    
+	<servlet>
     	<servlet-name>RSXServiceServlet</servlet-name>
         <servlet-class>ningyuan.pan.webx.web.servlet.RSXServiceServlet</servlet-class>
     </servlet>
@@ -160,6 +165,11 @@
     <servlet-mapping>
     	<servlet-name>XServiceAllRolesJSONServlet</servlet-name>
     	<url-pattern>/xservice/allroles.json</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+    	<servlet-name>PulseServlet</servlet-name>
+    	<url-pattern>/pulse.html</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>
