@@ -19,17 +19,19 @@
     <servicex-api.version>0.0.1-SNAPSHOT</servicex-api.version>
     <servicex.version>0.0.1-SNAPSHOT</servicex.version>
     
+    <javax-servlet-api.version>4.0.1</javax-servlet-api.version>
+    
     <jedis.version>3.2.0</jedis.version>
     <lettuce-core.version>5.2.2.RELEASE</lettuce-core.version>
     
     <jersey.version>2.30</jersey.version>
     
+    <javax-websocket-api.version>1.1</javax-websocket-api.version>
+    
 	<slf4j-api.version>1.7.30</slf4j-api.version>
 	<logback-classic.version>1.2.3</logback-classic.version>
 	<slf4j-jdk14.version>1.7.30</slf4j-jdk14.version>
-	
-	<javax.servlet.version>4.0.1</javax.servlet.version>
-	
+
 	<junit.version>4.12</junit.version>
   </properties>
   
@@ -145,6 +147,14 @@
     			<scope>compile</scope>
 		   </dependency>
    	       
+   	       <!-- javax servlet api -->
+   	       <dependency>
+       			<groupId>javax.servlet</groupId>
+    			<artifactId>javax.servlet-api</artifactId>
+    			<version>${javax-servlet-api.version}</version>
+    			<scope>provided</scope>
+		   </dependency>
+			
    	       <!-- java redis client -->
    	       <dependency>
     	   		<groupId>redis.clients</groupId>
@@ -185,7 +195,16 @@
     				</exclusion>
     			</exclusions>
    		   </dependency>
-   		 
+   		   
+   		   <!-- javax websocket api -->
+   		   <dependency>
+    			<groupId>javax.websocket</groupId>
+    			<artifactId>javax.websocket-api</artifactId>
+    			<version>${javax-websocket-api.version}</version>
+    			<scope>provided</scope>
+		   </dependency>
+   		   
+   		   
    	       <!-- logging -->
    	       <dependency>
     			<groupId>org.slf4j</groupId>
@@ -213,14 +232,7 @@
                 <version>${slf4j-jdk14.version}</version>
                 <scope>runtime</scope>
            </dependency>
-   	       
-   	       <dependency>
-       			<groupId>javax.servlet</groupId>
-    			<artifactId>javax.servlet-api</artifactId>
-    			<version>${javax.servlet.version}</version>
-    			<scope>provided</scope>
-		   </dependency>
-			
+   	      
 		   <dependency>  
                 <groupId>junit</groupId>
       			<artifactId>junit</artifactId>
@@ -245,6 +257,11 @@
     	<artifactId>ServiceX</artifactId>
     </dependency>
    
+     <dependency>
+    	<groupId>javax.servlet</groupId>
+    	<artifactId>javax.servlet-api</artifactId>
+    </dependency>
+    
    	<dependency>
    		<groupId>redis.clients</groupId>
     	<artifactId>jedis</artifactId>
@@ -263,6 +280,11 @@
     	 <artifactId>jersey-hk2</artifactId>
     </dependency> 
     
+     <dependency>
+    	<groupId>javax.websocket</groupId>
+    	<artifactId>javax.websocket-api</artifactId>
+    </dependency>
+    
     <dependency>
     	<groupId>org.slf4j</groupId>
     	<artifactId>slf4j-api</artifactId>
@@ -278,12 +300,7 @@
         <artifactId>slf4j-jdk14</artifactId>
     </dependency> 
    	-->
-   	         
-    <dependency>
-    	<groupId>javax.servlet</groupId>
-    	<artifactId>javax.servlet-api</artifactId>
-    </dependency>
-    
+   	    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
