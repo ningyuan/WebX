@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ningyuan.pan.webx.util.ServiceName;
-import ningyuan.pan.webx.util.cache.Cache;
 import ningyuan.pan.servicex.XService;
 
 /**
@@ -41,33 +40,14 @@ public class XServiceServlet extends HttpServlet {
         
 		response.setContentType("text/html;charset=utf-8");
         
-		String cacheName = getServletContext().getInitParameter("cache.name");
-		Cache cache = (Cache)getServletContext().getAttribute(cacheName);
-		
 		XService service = (XService)getServletContext().getAttribute(ServiceName.X_SERVICE.getName());
 		
 		PrintWriter out = response.getWriter();
 	    
 		if(service != null) {
-			if(cache != null) {
-				// check cache first
-				String name = cache.get("name");
-				if(name == null) {
+			String name = service.getName();
 					
-					name = service.getName();
-					
-					cache.put("name", name);
-					
-					out.write("Call service and set cache: "+name);
-					
-				}
-				else {
-					 out.write("Hit cache: "+name);
-				}
-			}
-			else {
-				out.write("No cache: "+service.getName());
-			}
+			out.write(name);
 		}
 		else {
 			out.write("No service");

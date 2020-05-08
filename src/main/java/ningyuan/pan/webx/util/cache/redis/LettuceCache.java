@@ -98,7 +98,7 @@ public class LettuceCache implements Cache {
 	}
 
 	@Override
-	public String get(String key) {
+	public String getText(String key) {
 		readLock.lock();
 		try {
 			if(state == State.OPEN) {
@@ -115,7 +115,7 @@ public class LettuceCache implements Cache {
 	}
 	
 	@Override
-	public boolean put(String key, String value) {
+	public boolean putText(String key, String value) {
 		readLock.lock();
 		try {
 			if(state == State.OPEN) {
@@ -174,5 +174,23 @@ public class LettuceCache implements Cache {
 		finally {
 			writeLock.unlock();
 		}
+	}
+
+	@Override
+	public void setExpire(int seconds) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public byte[] getBinary(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean putBinary(String key, byte[] value) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

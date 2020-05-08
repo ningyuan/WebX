@@ -13,12 +13,18 @@ public interface Cache {
 	
 	public void clear();
 	
-	public String get(String key);
+	public void setExpire(int seconds);
 	
-	public boolean put(String key, String value);
+	public void close(String... args);
+	
+	public String getText(String key);
+	
+	public boolean putText(String key, String value);
+	
+	public byte[] getBinary(String key);
+	
+	public boolean putBinary(String key, byte[] value);
 	
 	public boolean remove(String key);
 	
-	public void close(String... args);
-
 }
