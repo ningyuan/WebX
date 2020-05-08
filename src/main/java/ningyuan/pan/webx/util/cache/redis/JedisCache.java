@@ -39,6 +39,8 @@ public class JedisCache implements Cache {
 	
 	private int port = 1234;
 	
+	private int expireTimeInSec = 60;
+	
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 	
 	// redis command is atomic both read and write operation could be protected by the read lock
@@ -54,7 +56,7 @@ public class JedisCache implements Cache {
 		jedisPoolConfig.setMaxIdle(5);
 		jedisPoolConfig.setMaxWaitMillis(100000);
 		jedisPoolConfig.setTestOnBorrow(true);
-	
+		
 		Properties configProp;
 		try {
 			configProp = new Properties();
@@ -87,7 +89,7 @@ public class JedisCache implements Cache {
 	}
 
 	@Override
-	public void clear() {
+	public void clear() throws Exception{
 		Jedis jedis = null;
 		
 		readLock.lock();
@@ -113,7 +115,7 @@ public class JedisCache implements Cache {
 	}
 
 	@Override
-	public String getText(String key) {
+	public String getText(String key) throws Exception{
 		Jedis jedis = null;
 		
 		readLock.lock();
@@ -143,7 +145,7 @@ public class JedisCache implements Cache {
 	}
 	
 	@Override
-	public boolean putText(String key, String value) {
+	public boolean putText(String key, String value) throws Exception{
 		Jedis jedis = null;
 		
 		readLock.lock();
@@ -154,7 +156,8 @@ public class JedisCache implements Cache {
 				jedis = jedisPool.getResource();
 				
 				String state = jedis.set(key, value);
-					
+				jedis.expire(key, expireTimeInSec);
+				
 				if(state.equalsIgnoreCase("OK")) {
 					return true;
 				}
@@ -181,7 +184,7 @@ public class JedisCache implements Cache {
 	}
 
 	@Override
-	public boolean remove(String key) {
+	public boolean remove(String key) throws Exception{
 		Jedis jedis = null;
 		
 		readLock.lock();
@@ -237,18 +240,23 @@ public class JedisCache implements Cache {
 
 	@Override
 	public void setExpire(int seconds) {
-		// TODO Auto-generated method stub
-		
+		readLock.lock();
+		try {
+			expireTimeInSec = seconds;
+		}
+		finally {
+			readLock.unlock();
+		}
 	}
 
 	@Override
-	public byte[] getBinary(String key) {
+	public byte[] getBinary(String key) throws Exception{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean putBinary(String key, byte[] value) {
+	public boolean putBinary(String key, byte[] value) throws Exception{
 		// TODO Auto-generated method stub
 		return false;
 	}
