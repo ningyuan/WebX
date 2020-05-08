@@ -5,6 +5,7 @@ package ningyuan.pan.webx.util.cache.redis;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -18,7 +19,6 @@ import ningyuan.pan.webx.util.cache.State;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.exceptions.JedisException;
 
 /**
  * @author ningyuan
@@ -39,6 +39,8 @@ public class JedisCache implements Cache {
 	
 	private int port = 1234;
 	
+	private int expireTimeInSec = 60;
+	
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 	
 	// redis command is atomic both read and write operation could be protected by the read lock
@@ -54,7 +56,7 @@ public class JedisCache implements Cache {
 		jedisPoolConfig.setMaxIdle(5);
 		jedisPoolConfig.setMaxWaitMillis(100000);
 		jedisPoolConfig.setTestOnBorrow(true);
-	
+		
 		Properties configProp;
 		try {
 			configProp = new Properties();
@@ -87,7 +89,7 @@ public class JedisCache implements Cache {
 	}
 
 	@Override
-	public void clear() {
+	public void clear() throws Exception{
 		Jedis jedis = null;
 		
 		readLock.lock();
@@ -100,9 +102,6 @@ public class JedisCache implements Cache {
 				jedis.flushDB();
 			}
 		}
-		catch (JedisException e) {
-			LOGGER.error(ExceptionUtils.printStackTraceToString(e));
-		}
 		finally {
 			if(jedis != null) {
 				jedis.close();
@@ -113,13 +112,13 @@ public class JedisCache implements Cache {
 	}
 
 	@Override
-	public String get(String key) {
+	public String getText(String key) throws Exception{
 		Jedis jedis = null;
 		
 		readLock.lock();
 		try {
 			if(state == State.OPEN) {
-				LOGGER.debug("get("+key+")");
+				LOGGER.debug("getText("+key+")");
 				
 				jedis = jedisPool.getResource();
 				
@@ -127,10 +126,6 @@ public class JedisCache implements Cache {
 				
 			}
 			
-			return null;
-		}
-		catch (JedisException e) {
-			LOGGER.error(ExceptionUtils.printStackTraceToString(e));
 			return null;
 		}
 		finally {
@@ -143,18 +138,19 @@ public class JedisCache implements Cache {
 	}
 	
 	@Override
-	public boolean put(String key, String value) {
+	public boolean putText(String key, String value) throws Exception{
 		Jedis jedis = null;
 		
 		readLock.lock();
 		try {
 			if(state == State.OPEN) {
-				LOGGER.debug("put("+key+", "+value+")");
+				LOGGER.debug("putText("+key+", "+value+")");
 				
 				jedis = jedisPool.getResource();
 				
 				String state = jedis.set(key, value);
-					
+				jedis.expire(key, expireTimeInSec);
+				
 				if(state.equalsIgnoreCase("OK")) {
 					return true;
 				}
@@ -166,11 +162,6 @@ public class JedisCache implements Cache {
 				return false;
 			}
 		}
-		catch (JedisException e) {
-			LOGGER.error(ExceptionUtils.printStackTraceToString(e));
-			
-			return false;
-		}
 		finally {
 			if(jedis != null) {
 				jedis.close();
@@ -181,13 +172,13 @@ public class JedisCache implements Cache {
 	}
 
 	@Override
-	public boolean remove(String key) {
+	public boolean removeText(String key) throws Exception{
 		Jedis jedis = null;
 		
 		readLock.lock();
 		try {
 			if(state == State.OPEN) {
-				LOGGER.debug("remove("+key+")");
+				LOGGER.debug("removeText("+key+")");
 				
 				jedis = jedisPool.getResource();
 				
@@ -203,11 +194,6 @@ public class JedisCache implements Cache {
 			else {
 				return false;
 			}
-		}
-		catch (JedisException e) {
-			LOGGER.error(ExceptionUtils.printStackTraceToString(e));
-			
-			return false;
 		}
 		finally {
 			if(jedis != null) {
@@ -232,6 +218,120 @@ public class JedisCache implements Cache {
 		}
 		finally {
 			writeLock.unlock();
+		}
+	}
+
+	@Override
+	public void setExpire(int seconds) {
+		readLock.lock();
+		try {
+			if(state == State.OPEN) {
+				LOGGER.debug("setExpire("+seconds+")");
+				
+				expireTimeInSec = seconds;
+			}
+		}
+		finally {
+			readLock.unlock();
+		}
+	}
+
+	@Override
+	public byte[] getBinary(String key) throws Exception{
+		Jedis jedis = null;
+		
+		readLock.lock();
+		try {
+			if(state == State.OPEN) {
+				byte[] bKey = key.getBytes(StandardCharsets.UTF_8);
+				
+				LOGGER.debug("getBinary("+bKey+")");
+				
+				jedis = jedisPool.getResource();
+				
+				return jedis.get(bKey);
+			}
+			else {
+				return null;
+			}
+		}
+		finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+			
+			readLock.unlock();
+		}
+	}
+
+	@Override
+	public boolean putBinary(String key, byte[] value) throws Exception{
+		Jedis jedis = null;
+		
+		readLock.lock();
+		try {
+			if(state == State.OPEN) {
+				byte[] bKey = key.getBytes(StandardCharsets.UTF_8);
+				
+				LOGGER.debug("putBinary("+bKey+", "+value+")");
+				
+				jedis = jedisPool.getResource();
+				
+				String state = jedis.set(bKey, value);
+				jedis.expire(bKey, expireTimeInSec);
+				
+				if(state.equalsIgnoreCase("OK")) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+		}
+		finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+			
+			readLock.unlock();
+		}
+	}
+
+	@Override
+	public boolean removeBinary(String key) throws Exception {
+		Jedis jedis = null;
+		
+		readLock.lock();
+		try {
+			if(state == State.OPEN) {
+				byte[] bKey = key.getBytes();
+				
+				LOGGER.debug("removeBinary("+bKey+")");
+				
+				jedis = jedisPool.getResource();
+				
+				long state = jedis.del(bKey);
+				
+				if(state == 1) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+		}
+		finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+			
+			readLock.unlock();
 		}
 	}
 }
