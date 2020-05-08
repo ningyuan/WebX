@@ -172,13 +172,13 @@ public class JedisCache implements Cache {
 	}
 
 	@Override
-	public boolean remove(String key) throws Exception{
+	public boolean removeText(String key) throws Exception{
 		Jedis jedis = null;
 		
 		readLock.lock();
 		try {
 			if(state == State.OPEN) {
-				LOGGER.debug("remove("+key+")");
+				LOGGER.debug("removeText("+key+")");
 				
 				jedis = jedisPool.getResource();
 				
@@ -256,6 +256,10 @@ public class JedisCache implements Cache {
 			}
 		}
 		finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+			
 			readLock.unlock();
 		}
 	}
@@ -288,6 +292,45 @@ public class JedisCache implements Cache {
 			}
 		}
 		finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+			
+			readLock.unlock();
+		}
+	}
+
+	@Override
+	public boolean removeBinary(String key) throws Exception {
+		Jedis jedis = null;
+		
+		readLock.lock();
+		try {
+			if(state == State.OPEN) {
+				byte[] bKey = key.getBytes();
+				
+				LOGGER.debug("removeBinary("+bKey+")");
+				
+				jedis = jedisPool.getResource();
+				
+				long state = jedis.del(bKey);
+				
+				if(state == 1) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+		}
+		finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+			
 			readLock.unlock();
 		}
 	}

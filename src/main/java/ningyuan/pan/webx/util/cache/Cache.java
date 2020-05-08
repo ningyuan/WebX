@@ -25,6 +25,8 @@ public interface Cache {
 	
 	public boolean putBinary(String key, byte[] value) throws Exception;
 	
-	public boolean remove(String key) throws Exception;
+	public boolean removeText(String key) throws Exception;
+	
+	public boolean removeBinary(String key) throws Exception;
 	
 }
