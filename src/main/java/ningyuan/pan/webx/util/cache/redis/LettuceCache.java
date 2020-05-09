@@ -5,6 +5,7 @@ package ningyuan.pan.webx.util.cache.redis;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -38,6 +39,8 @@ public class LettuceCache implements Cache {
 	private int port = 1234;
 	
 	private RedisClient redisClient;
+	
+	private int expireTimeInSec = 60;
 	
 	// lettuce redis connection is designed to be long lived and thread safe
 	private StatefulRedisConnection<String, String> connection;
@@ -120,7 +123,7 @@ public class LettuceCache implements Cache {
 		try {
 			if(state == State.OPEN) {
 				RedisCommands<String, String> syncCommands = connection.sync();
-				String ret = syncCommands.set(key, value);
+				String ret = syncCommands.setex(key, expireTimeInSec, value);
 				
 				if(ret.equalsIgnoreCase("OK")) {
 					return true;
@@ -178,25 +181,80 @@ public class LettuceCache implements Cache {
 
 	@Override
 	public void setExpire(int seconds) {
-		// TODO Auto-generated method stub
-		
+		readLock.lock();
+		try {
+			if(state == State.OPEN) {
+				expireTimeInSec = seconds;
+			}
+		}
+		finally {
+			readLock.unlock();
+		}
 	}
 
 	@Override
 	public byte[] getBinary(String key) throws Exception{
-		// TODO Auto-generated method stub
-		return null;
+		readLock.lock();
+		try {
+			if(state == State.OPEN) {
+				RedisCommands<String, String> syncCommands = connection.sync();
+				String ret = syncCommands.get(key);
+				
+				if(ret != null) {
+					return ret.getBytes();
+				}
+			}
+			
+			return null;
+		}
+		finally {
+			readLock.unlock();
+		}
 	}
 
 	@Override
 	public boolean putBinary(String key, byte[] value) throws Exception{
-		// TODO Auto-generated method stub
-		return false;
+		readLock.lock();
+		try {
+			if(state == State.OPEN) {
+				RedisCommands<String, String> syncCommands = connection.sync();
+				String ret = syncCommands.setex(key, expireTimeInSec, new String(value, StandardCharsets.UTF_8));
+				
+				if(ret.equalsIgnoreCase("OK")) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			
+			return false;
+		}
+		finally {
+			readLock.unlock();
+		}
 	}
 
 	@Override
 	public boolean removeBinary(String key) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		readLock.lock();
+		try {
+			if(state == State.OPEN) {
+				RedisCommands<String, String> syncCommands = connection.sync();
+				long ret = syncCommands.del(key);
+				
+				if(ret == 1) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			
+			return false;
+		}
+		finally {
+			readLock.unlock();
+		}
 	}
 }
