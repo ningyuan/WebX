@@ -59,11 +59,11 @@ public class StaticResourceCacheFilter extends HttpFilter {
 		LOGGER.debug("doFilter()");
 		
 		String uri = request.getRequestURI();
-		
 		System.out.println(uri);
-		Enumeration<String> headerNames = request.getHeaderNames();
-	    while (headerNames.hasMoreElements()) {
-	        String key = (String) headerNames.nextElement();
+		
+		Enumeration<String> headers = request.getHeaderNames();
+	    while (headers.hasMoreElements()) {
+	        String key = headers.nextElement();
 	        String value = request.getHeader(key);
 	        System.out.println(key+" "+value);
 	    }
@@ -74,74 +74,116 @@ public class StaticResourceCacheFilter extends HttpFilter {
 		 * 			browser.cache.disk.enable
 		 */
 		if(cache != null) {
-			MediaType mediaType = getResourceMeidaType(uri);
-			String type = getResourceType(mediaType);
-			
-			if(TYPE_TEXT.equals(type)) {
-				String text = null;
-				
-				try {
-					text = cache.getText(uri);
-				}
-				catch (Exception e) {
-					LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
-					
-					chain.doFilter(request, response);
-					return;
-				}
-				
-				if(text == null) {
-					ContentHttpServletResponseWrapper wrapper = new ContentHttpServletResponseWrapper(response);
-				
-					chain.doFilter(request, wrapper);
-					
-					text = wrapper.getContentInString();
-					
-					try {
-						cache.putText(uri, text);
-					}
-					catch (Exception e) {
-						LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
-					}
-				}
-				
-				response.setCharacterEncoding("UTF-8");
-		        response.setContentType(mediaType.getType()+";charset=utf-8");
-		        response.getWriter().write(text);
-			}
-			else if(TYPE_BINARY.equals(type)) {
-				byte[] data = null;
-				
-				try {
-					data = cache.getBinary(uri);
-				}
-				catch (Exception e) {
-					LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
-					
-					chain.doFilter(request, response);
-					return;
-				}
-				
-				if(data == null) {
-					ContentHttpServletResponseWrapper wrapper = new ContentHttpServletResponseWrapper(response);
-				
-					chain.doFilter(request, wrapper);
-					
-					data = wrapper.getContentInByte();
-						
-					try {
-						cache.putBinary(uri, data);
-					}
-					catch (Exception e) {
-						LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
-					}
-				}
-				
-				response.getOutputStream().write(data);
+			if(isCacheable(request)) {
+				process(request, response, chain);
 			}
 			else {
 				chain.doFilter(request, response);
 			}
+		}
+		else {
+			chain.doFilter(request, response);
+		}
+	}
+	
+	private boolean isCacheable(HttpServletRequest request) {
+		if(request.getParameterNames().hasMoreElements()) {
+			return false;
+		}
+		
+		Enumeration<String> headers = request.getHeaderNames();
+		while (headers.hasMoreElements()) {
+	        String header = headers.nextElement();
+	        
+	        if("if-modified-since".equalsIgnoreCase(header)) {
+	        	return false;
+	        }
+	        if("if-none-match".equalsIgnoreCase(header)) {
+	        	return false;
+	        }
+	        if("cache-control".equalsIgnoreCase(header)) {
+	        	Enumeration<String> values = request.getHeaders(header);
+	        	
+	        	while(values.hasMoreElements()) {
+	        		String value = values.nextElement();
+	        		
+	        		if("no-store".equalsIgnoreCase(value)) {
+	        			return false;
+	        		}
+	        	}
+	        }
+	    }
+		
+		return true;
+	}
+	
+	private void process(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+		String uri = request.getRequestURI();
+		
+		MediaType mediaType = getResourceMeidaType(uri);
+		String type = getResourceType(mediaType);
+		
+		if(TYPE_TEXT.equals(type)) {
+			String text = null;
+			
+			try {
+				text = cache.getText(uri);
+			}
+			catch (Exception e) {
+				LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+				
+				chain.doFilter(request, response);
+				return;
+			}
+			
+			if(text == null) {
+				ContentHttpServletResponseWrapper wrapper = new ContentHttpServletResponseWrapper(response);
+			
+				chain.doFilter(request, wrapper);
+				
+				text = wrapper.getContentInString();
+				
+				try {
+					cache.putText(uri, text);
+				}
+				catch (Exception e) {
+					LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+				}
+			}
+			
+			response.setCharacterEncoding("UTF-8");
+	        response.setContentType(mediaType.getType()+";charset=utf-8");
+	        response.getWriter().write(text);
+		}
+		else if(TYPE_BINARY.equals(type)) {
+			byte[] data = null;
+			
+			try {
+				data = cache.getBinary(uri);
+			}
+			catch (Exception e) {
+				LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+				
+				chain.doFilter(request, response);
+				return;
+			}
+			
+			if(data == null) {
+				ContentHttpServletResponseWrapper wrapper = new ContentHttpServletResponseWrapper(response);
+			
+				chain.doFilter(request, wrapper);
+				
+				data = wrapper.getContentInByte();
+					
+				try {
+					cache.putBinary(uri, data);
+				}
+				catch (Exception e) {
+					LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+				}
+			}
+			
+			response.getOutputStream().write(data);
 		}
 		else {
 			chain.doFilter(request, response);
