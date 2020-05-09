@@ -9,12 +9,11 @@
 	<!-- if not defined use default index.jsp -->
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 	
 	<error-page>    
       <error-code>404</error-code>    
-      <location>/pages/error/404.jsp</location>    
+      <location>/pages/error/404.html</location>    
    	</error-page>    
    
     <context-param>
@@ -94,7 +93,7 @@
 	
 	<servlet>
     	<servlet-name>StartServlet</servlet-name>
-        <servlet-class>ningyuan.pan.webx.web.servlet.StartServlet</servlet-class>
+        <servlet-class>ningyuan.pan.webx.web.servlet.StartPageServlet</servlet-class>
    		<!-- the servlet is loaded on startup the smaller the positive num is the higher the priority is  -->
         <load-on-startup>0</load-on-startup>
     </servlet>
@@ -145,7 +144,7 @@
     
 	<servlet-mapping>
         <servlet-name>StartServlet</servlet-name>
-        <url-pattern>/start</url-pattern>
+        <url-pattern>/start.html</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 //@WebServlet("/")
-public class StartServlet extends HttpServlet {
+public class StartPageServlet extends HttpServlet {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(StartServlet.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StartPageServlet.class);
 	
 	/**
 	 * 
@@ -39,7 +39,7 @@ public class StartServlet extends HttpServlet {
 		
 	
 		// path starting with '/' is interpreted as relative to current context root
-		request.getRequestDispatcher("/pages/start.jsp").forward(request, response);
+		request.getRequestDispatcher("/pages/start.html").forward(request, response);
 	}
 
 	@Override
