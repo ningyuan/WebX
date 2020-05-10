@@ -3,8 +3,12 @@
  */
 package ningyuan.pan.webx.web.filter;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.util.Enumeration;
+import java.util.Properties;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -45,12 +49,26 @@ public class StaticResourceCacheFilter extends HttpFilter {
 	
 	private Cache cache = null;
 	
+	/*
+	 * The mapping between http request uri and static file location.
+	 * Keep this mapping updated when you change the request uri or
+	 * the static resource file. (the mapping file is conf/requestURI.staticFile.mapping)
+	 */
+	private Properties URIResourceMapping = new Properties();
+	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		LOGGER.debug("init()");
 		
 		String cacheName = filterConfig.getServletContext().getInitParameter("cache.name");
 		cache = (Cache)filterConfig.getServletContext().getAttribute(cacheName);
+		
+		try {
+			URIResourceMapping.load(new InputStreamReader(StaticResourceCacheFilter.class.getClassLoader().getResourceAsStream("conf/cache.requestURI.staticResource.mapping")));
+		} 
+		catch (IOException ioe) {
+			LOGGER.debug(ExceptionUtils.printStackTraceToString(ioe));
+		}
 	}
 	
 	@Override
@@ -59,6 +77,21 @@ public class StaticResourceCacheFilter extends HttpFilter {
 		LOGGER.debug("doFilter()");
 		
 		String uri = request.getRequestURI();
+		
+		String resourceName = URIResourceMapping.getProperty(uri);
+		
+		File resource = null;
+		
+		if(resourceName != null) {
+			try {
+				resource = new File(StaticResourceCacheFilter.class.getClassLoader().getResource(resourceName).toURI());
+			} 
+			catch (URISyntaxException use) {
+				LOGGER.debug(ExceptionUtils.printStackTraceToString(use));
+			}
+		}
+	
+		
 		System.out.println(uri);
 		
 		Enumeration<String> headers = request.getHeaderNames();
@@ -73,9 +106,9 @@ public class StaticResourceCacheFilter extends HttpFilter {
 		 * firefox: browser.cache.memory.enable
 		 * 			browser.cache.disk.enable
 		 */
-		if(cache != null) {
+		if(cache != null && resource != null) {
 			if(isCacheable(request)) {
-				process(request, response, chain);
+				process(request, response, chain, resource);
 			}
 			else {
 				chain.doFilter(request, response);
@@ -87,6 +120,7 @@ public class StaticResourceCacheFilter extends HttpFilter {
 	}
 	
 	private boolean isCacheable(HttpServletRequest request) {
+		// requests with parameters are not cached
 		if(request.getParameterNames().hasMoreElements()) {
 			return false;
 		}
@@ -95,9 +129,11 @@ public class StaticResourceCacheFilter extends HttpFilter {
 		while (headers.hasMoreElements()) {
 	        String header = headers.nextElement();
 	        
+	        // the browser may use its cache
 	        if("if-modified-since".equalsIgnoreCase(header)) {
 	        	return false;
 	        }
+	        // the browser may use its cache
 	        if("if-none-match".equalsIgnoreCase(header)) {
 	        	return false;
 	        }
@@ -107,6 +143,7 @@ public class StaticResourceCacheFilter extends HttpFilter {
 	        	while(values.hasMoreElements()) {
 	        		String value = values.nextElement();
 	        		
+	        		// do not use a cache
 	        		if("no-store".equalsIgnoreCase(value)) {
 	        			return false;
 	        		}
@@ -117,11 +154,13 @@ public class StaticResourceCacheFilter extends HttpFilter {
 		return true;
 	}
 	
-	private void process(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+	private void process(HttpServletRequest request, HttpServletResponse response, FilterChain chain, File resource) throws IOException, ServletException {
 		String uri = request.getRequestURI();
 		
+		// the media type of the requested resource
 		MediaType mediaType = getResourceMeidaType(uri);
-		String type = getResourceType(mediaType);
+		// the type of the static resource
+		String type = getStaticResourceType(mediaType);
 		
 		if(TYPE_TEXT.equals(type)) {
 			String text = null;
@@ -132,6 +171,7 @@ public class StaticResourceCacheFilter extends HttpFilter {
 			catch (Exception e) {
 				LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
 				
+				// the cache dose not work properly
 				chain.doFilter(request, response);
 				return;
 			}
@@ -143,12 +183,20 @@ public class StaticResourceCacheFilter extends HttpFilter {
 				
 				text = wrapper.getContentInString();
 				
-				try {
-					cache.putText(uri, text);
+				// update the cache
+				if(text != null && !text.isEmpty()) {
+					try {
+						cache.putText(uri, text);
+					}
+					catch (Exception e) {
+						LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+					}
 				}
-				catch (Exception e) {
-					LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
-				}
+			}
+			else {
+				// cache hit and ask the browser to use its cache if possible
+				response.addHeader("Cache-Control", "max-age=60");
+				response.addDateHeader("Last-Modified", resource.lastModified());
 			}
 			
 			response.setCharacterEncoding("UTF-8");
@@ -175,14 +223,21 @@ public class StaticResourceCacheFilter extends HttpFilter {
 				
 				data = wrapper.getContentInByte();
 					
-				try {
-					cache.putBinary(uri, data);
-				}
-				catch (Exception e) {
-					LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+				if(data != null && data.length > 0) {
+					try {
+						cache.putBinary(uri, data);
+					}
+					catch (Exception e) {
+						LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+					}
 				}
 			}
+			else {
+				response.addHeader("Cache-Control", "max-age=60");
+				response.addDateHeader("Last-Modified", resource.lastModified());
+			}
 			
+			response.setContentType(mediaType.getType());
 			response.getOutputStream().write(data);
 		}
 		else {
@@ -216,7 +271,7 @@ public class StaticResourceCacheFilter extends HttpFilter {
 		return MediaType.UNKNOWN;
 	}
 	
-	private String getResourceType(MediaType mediaType) {
+	private String getStaticResourceType(MediaType mediaType) {
 		for(MediaType tType : TEXT_MEDIA_TYPES) {
 			if(mediaType == tType) {
 				return TYPE_TEXT;

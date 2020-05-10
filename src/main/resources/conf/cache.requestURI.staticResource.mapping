@@ -1,0 +1,12 @@
+${context.path}/start.html = ../../pages/start.html
+${context.path}/pulse.html = ../../pages/pulse.html
+${context.path}/xservice/allusers.html = ../../pages/allUsers.html
+${context.path}/xservice/allroles.html = ../../pages/allRoles.html
+
+${context.path}/pages/js/d3CollapsibleTree.js = ../../pages/js/d3CollapsibleTree.js
+${context.path}/pages/js/d3DisjointForceDirectedGraph.js = ../../pages/js/d3DisjointForceDirectedGraph.js
+${context.path}/pages/js/d3DountChart.js = ../../pages/js/d3DountChart.js
+${context.path}/pages/js/d3LineChart.js = ../../pages/js/d3LineChart.js
+${context.path}/pages/js/util.js = ../../pages/js/util.js
+
+${context.path}/pages/image/teal.jpg = ../../pages/image/teal.jpg
