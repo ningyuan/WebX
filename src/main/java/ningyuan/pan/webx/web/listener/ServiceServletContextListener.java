@@ -26,9 +26,9 @@ import ningyuan.pan.servicex.persistence.dao.impl.UserDAOJPAImpl;
 import ningyuan.pan.servicex.util.GlobalObjectName;
 import ningyuan.pan.servicex.util.ServiceXUtil;
 import ningyuan.pan.util.exception.ExceptionUtils;
-import ningyuan.pan.util.persistence.ActiveMQXADataSourceManager;
+import ningyuan.pan.util.persistence.AtomikosActiveMQXADataSourceManager;
+import ningyuan.pan.util.persistence.C3P0JDBCDataSourceManager;
 import ningyuan.pan.util.persistence.DataSourceManager;
-import ningyuan.pan.util.persistence.JDBCDataSourceManager;
 import ningyuan.pan.util.persistence.JPADataSourceManager;
 import ningyuan.pan.util.persistence.MybatisDataSourceManager;
 import ningyuan.pan.webx.util.ServiceName;
@@ -52,9 +52,9 @@ public class ServiceServletContextListener implements ServletContextListener {
 		
 		try {
 			//dataSourceManager = new MybatisDataSourceManager();
-			//dataSourceManager = new JDBCDataSourceManager();
+			//dataSourceManager = new C3P0JDBCDataSourceManager();
 			XADataSourcemanager = new JPADataSourceManager("dev-jta-hibernate");
-			JMSXADataSourceManager = new ActiveMQXADataSourceManager();
+			JMSXADataSourceManager = new AtomikosActiveMQXADataSourceManager();
 			
 			//UserDAO userDAO = dataSourceManager.initAndGetThreadLocalConnection().getMapper(UserDAO.class);
 			UserDAO userDAO = new UserDAOJPAImpl(XADataSourcemanager);
@@ -69,7 +69,6 @@ public class ServiceServletContextListener implements ServletContextListener {
 			ServiceXUtil.getInstance().setGelobalObject(GlobalObjectName.XA_DATA_SOURCE_MANAGER, XADataSourcemanager);
 			ServiceXUtil.getInstance().setGelobalObject(GlobalObjectName.JMS_XA_DATA_SOURCE_MANAGER, JMSXADataSourceManager);
 			
-			System.out.println("!!!"+ServiceName.X_SERVICE.getName());
 			sce.getServletContext().setAttribute(ServiceName.X_SERVICE.getName(), serviceX);
 		}
 		catch(Exception e) {
@@ -81,9 +80,29 @@ public class ServiceServletContextListener implements ServletContextListener {
 				} catch (Exception e1) {
 					LOGGER.debug(ExceptionUtils.printStackTraceToString(e1));
 				}
-			}*/
+			}
 			
-			ServiceXUtil.getInstance().removeGelobalObject(GlobalObjectName.MYBATIS_DATA_SOURCE_MANAGER);
+			ServiceXUtil.getInstance().removeGelobalObject(GlobalObjectName.MYBATIS_DATA_SOURCE_MANAGER);*/
+			
+			if(XADataSourcemanager != null) {
+				try {
+					XADataSourcemanager.close();
+				} catch (Exception e1) {
+					LOGGER.debug(ExceptionUtils.printStackTraceToString(e1));
+				}
+			}
+			
+			if(JMSXADataSourceManager != null) {
+				try {
+					JMSXADataSourceManager.close();
+				} catch (Exception e1) {
+					LOGGER.debug(ExceptionUtils.printStackTraceToString(e1));
+				}
+			}
+			
+			ServiceXUtil.getInstance().removeGelobalObject(GlobalObjectName.XA_DATA_SOURCE_MANAGER);
+			ServiceXUtil.getInstance().removeGelobalObject(GlobalObjectName.JMS_XA_DATA_SOURCE_MANAGER);
+			
 			sce.getServletContext().removeAttribute(ServiceName.X_SERVICE.getName());
 		}
 	}
