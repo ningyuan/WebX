@@ -79,7 +79,7 @@
     
     <filter>
     	<filter-name>StaticResourceCacheFilter</filter-name>
-        <filter-class>ningyuan.pan.webx.web.filter.StaticResourceCacheFilter</filter-class>
+        <filter-class>ningyuan.pan.webx.web.filter.cache.StaticResourceCacheFilter</filter-class>
     </filter>
     
     <!-- the sequence of filter-mapping is important -->

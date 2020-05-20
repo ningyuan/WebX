@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ningyuan.pan.webx.web.filter;
+package ningyuan.pan.webx.web.filter.cache;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
