@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.AsyncEvent;
@@ -31,9 +33,7 @@ import ningyuan.pan.util.exception.ExceptionUtils;
  */
 //@WebServlet(urlPatterns={"/rsxservice"}, asyncSupported=true)
 public class RSXServiceServlet extends HttpServlet {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RSXServiceServlet.class);
@@ -43,6 +43,8 @@ public class RSXServiceServlet extends HttpServlet {
 	private Client RSClient;
 	
 	private Properties RSServiceURIs;
+	
+	private ExecutorService threadPool = Executors.newFixedThreadPool(50);
 	
 	@Override
 	public void init() throws ServletException {
@@ -69,6 +71,8 @@ public class RSXServiceServlet extends HttpServlet {
 		if(RSClient != null) {
 			RSClient.close();
 		}
+		
+		threadPool.shutdownNow();
 	}
 
 	@Override
@@ -121,51 +125,64 @@ public class RSXServiceServlet extends HttpServlet {
 			public void onComplete(AsyncEvent event) throws IOException {}
 		});
 		
-		// start a new thread from the container
-		asyncContext.start(new Runnable() {
-			@Override
-			public void run() {
-				PrintWriter out = null;
+		AsyncTask task = new AsyncTask(response, asyncContext);
+		
+		threadPool.execute(task);
+	}
+	
+	private class AsyncTask implements Runnable {
+		
+		private final HttpServletResponse response;
+		
+		private final AsyncContext asyncContext;
+		
+		AsyncTask(HttpServletResponse response, AsyncContext asyncContext) {
+			this.response = response;
+			this.asyncContext = asyncContext;
+		}
+		
+		@Override
+		public void run() {
+			PrintWriter out = null;
+			
+			try {
+				out = response.getWriter();
 				
+				WebTarget serviceBase = RSClient.target(RSServiceURIs.getProperty("xservice.target.uri"));
+				
+				String name = serviceBase.path(RSServiceURIs.getProperty("xservice.op.getName"))
+						                 .request(MediaType.TEXT_PLAIN)
+						                 .get(String.class);
+				
+				out.write(name+"   ");
+				
+				String user = serviceBase.path(RSServiceURIs.getProperty("xservice.op.getUser"))			  
+					                     .request(MediaType.APPLICATION_JSON)
+					                     .get(String.class);
+				
+				out.write(user);
+			}
+			catch (Exception e) {
+				LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
+			}
+			finally {
 				try {
-					out = response.getWriter();
-					
-					WebTarget serviceBase = RSClient.target(RSServiceURIs.getProperty("xservice.target.uri"));
-					
-					String name = serviceBase.path(RSServiceURIs.getProperty("xservice.op.getName"))
-							                 .request(MediaType.TEXT_PLAIN)
-							                 .get(String.class);
-					
-					out.write(name+"   ");
-					
-					String user = serviceBase.path(RSServiceURIs.getProperty("xservice.op.getUser"))			  
-						                     .request(MediaType.APPLICATION_JSON)
-						                     .get(String.class);
-					
-					out.write(user);
+					if(out != null) {
+						out.close();
+					}
 				}
-				catch (Exception e) {
+				catch(Exception e) {
 					LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
 				}
 				finally {
 					try {
-						if(out != null) {
-							out.close();
-						}
+						asyncContext.complete();
 					}
 					catch(Exception e) {
 						LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
 					}
-					finally {
-						try {
-							asyncContext.complete();
-						}
-						catch(Exception e) {
-							LOGGER.debug(ExceptionUtils.printStackTraceToString(e));
-						}
-					}
 				}
 			}
-		});
+		}
 	}
 }
